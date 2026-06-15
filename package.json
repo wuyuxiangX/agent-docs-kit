@@ -1,0 +1,46 @@
+{
+  "name": "living-docs",
+  "version": "1.0.0",
+  "description": "Maintain a visual HTML documentation system for any codebase — domain (extensible) × type (architecture / changes / plans), plus a system-wide architecture page, roadmap, and auto-aggregated glossary. Shared CSS (centered body + sticky TOC), pure-CSS architecture box diagrams, local-vendored mermaid flowcharts, a validation gate, and scaffolding scripts. Cross-platform skill installable on Claude Code, Cursor, Codex CLI, and other agents.",
+  "license": "MIT",
+  "author": {
+    "name": "wuyuxiangX"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wuyuxiangX/living-docs.git"
+  },
+  "homepage": "https://github.com/wuyuxiangX/living-docs",
+  "bugs": {
+    "url": "https://github.com/wuyuxiangX/living-docs/issues"
+  },
+  "keywords": [
+    "agent-skill",
+    "claude-code",
+    "cursor",
+    "codex",
+    "living-docs",
+    "documentation",
+    "architecture-docs",
+    "mermaid",
+    "glossary"
+  ],
+  "skill": {
+    "name": "living-docs",
+    "path": "skills/living-docs/SKILL.md",
+    "agents": [
+      "claude-code",
+      "cursor",
+      "codex",
+      "opencode"
+    ]
+  },
+  "files": [
+    "skills/",
+    ".claude-plugin/",
+    "setup",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ]
+}

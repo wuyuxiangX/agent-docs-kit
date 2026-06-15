@@ -1,0 +1,20 @@
+{
+  "name": "living-docs",
+  "version": "1.0.0",
+  "description": "Maintain a visual HTML documentation system for any codebase — organized by domain (extensible) × type (architecture / changes / plans), with a system-wide architecture page, roadmap, and auto-aggregated glossary. Shared CSS (centered body + sticky TOC), pure-CSS architecture box diagrams, local-vendored mermaid flowcharts, a validation gate (broken links / orphans / missing diagrams or glossary / stale code references), and scaffolding scripts.",
+  "author": {
+    "name": "wuyuxiangX"
+  },
+  "homepage": "https://github.com/wuyuxiangX/living-docs",
+  "license": "MIT",
+  "keywords": [
+    "living-docs",
+    "documentation",
+    "architecture-docs",
+    "agent-skill",
+    "claude-code",
+    "cursor",
+    "codex",
+    "mermaid"
+  ]
+}

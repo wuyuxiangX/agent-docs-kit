@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "living-docs",
+  "version": "1.0.0",
+  "description": "Standalone marketplace for the living-docs skill — a visual HTML documentation system (domain × type) with architecture box diagrams, mermaid flowcharts, an auto-aggregated glossary, a validation gate, and scaffolding.",
+  "owner": {
+    "name": "wuyuxiangX"
+  },
+  "plugins": [
+    {
+      "name": "living-docs",
+      "description": "Maintain a visual HTML docs system for any project — domain × type (architecture / changes / plans), shared CSS, pure-CSS architecture diagrams + mermaid, entity glossary, validation gate, and scaffolding scripts.",
+      "version": "1.0.0",
+      "author": {
+        "name": "wuyuxiangX"
+      },
+      "source": ".",
+      "category": "productivity"
+    }
+  ]
+}
