@@ -1,0 +1,54 @@
+---
+title: "__TITLE__"
+description: "Plan for __DOMAIN__"
+domain: "__DOMAIN__"
+type: "plan"
+status: "draft"
+date: "__DATE__"
+terms:
+  - name: "__DOMAIN__"
+    description: "Replace with the subsystem or concept planned here."
+---
+
+# __TITLE__
+
+## Goal
+
+Describe the target outcome and the user/system value.
+
+## Scope
+
+- In scope: TODO
+- Out of scope: TODO
+
+## Design Direction
+
+<ArchMap
+  tiers={[
+    {
+      title: 'Proposed flow',
+      boxes: [
+        { title: 'TODO', body: 'Describe the proposed step.', tone: 'violet' },
+      ],
+    },
+  ]}
+/>
+
+<StateFlow
+  title="Target lifecycle"
+  states={[
+    { name: 'draft', description: 'Current plan or proposal.', tone: 'amber' },
+    { name: 'validated', description: 'Proven by implementation checks.', tone: 'blue' },
+    { name: 'shipped', description: 'Converted into change records.', tone: 'green' },
+  ]}
+/>
+
+## Validation
+
+- TODO: how this plan will be proven when implemented
+
+<TermGrid
+  items={[
+    { name: '__DOMAIN__', description: 'Replace with the plan-specific term.' },
+  ]}
+/>

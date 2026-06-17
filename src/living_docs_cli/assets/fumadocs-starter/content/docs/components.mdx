@@ -1,0 +1,132 @@
+---
+title: "Components"
+description: "Reusable MDX components for architecture, flow, state, change, and glossary docs."
+type: "guide"
+---
+
+# Components
+
+Use these MDX components directly in living-docs pages. Prefer components for
+common documentation shapes, and use mermaid only when the diagram needs custom
+graph syntax such as sequence diagrams, complex branches, or ER diagrams.
+
+## Architecture Map
+
+Use `<ArchMap />` for layered system structure.
+
+```mdx
+<ArchMap
+  tiers={[
+    {
+      title: 'Entry points',
+      boxes: [
+        { title: 'Web app', body: 'User-facing route or shell.', tone: 'blue' },
+        { title: 'API', body: 'Server boundary and contract.', tone: 'green' },
+      ],
+    },
+    {
+      title: 'Core services',
+      boxes: [
+        { title: 'Domain service', body: 'Business rules and orchestration.' },
+      ],
+    },
+  ]}
+/>
+```
+
+<ArchMap
+  tiers={[
+    {
+      title: 'Entry points',
+      boxes: [
+        { title: 'Web app', body: 'User-facing route or shell.', tone: 'blue' },
+        { title: 'API', body: 'Server boundary and contract.', tone: 'green' },
+      ],
+    },
+    {
+      title: 'Core services',
+      boxes: [
+        { title: 'Domain service', body: 'Business rules and orchestration.' },
+      ],
+    },
+  ]}
+/>
+
+## Flow Steps
+
+Use `<FlowSteps />` for request paths, execution flows, or operational runbooks.
+
+```mdx
+<FlowSteps
+  title="Request flow"
+  steps={[
+    { title: 'Receive input', body: 'Validate payload and identify the domain.', tone: 'blue' },
+    { title: 'Run service', body: 'Execute the domain action and persist state.', tone: 'green' },
+    { title: 'Return result', body: 'Send user-visible status and telemetry.', tone: 'amber' },
+  ]}
+/>
+```
+
+<FlowSteps
+  title="Request flow"
+  steps={[
+    { title: 'Receive input', body: 'Validate payload and identify the domain.', tone: 'blue' },
+    { title: 'Run service', body: 'Execute the domain action and persist state.', tone: 'green' },
+    { title: 'Return result', body: 'Send user-visible status and telemetry.', tone: 'amber' },
+  ]}
+/>
+
+## State Flow
+
+Use `<StateFlow />` for lifecycle states and simple state machines.
+
+```mdx
+<StateFlow
+  title="Document lifecycle"
+  states={[
+    { name: 'draft', description: 'Plan or work in progress.', tone: 'amber' },
+    { name: 'active', description: 'Current runtime truth.', tone: 'green' },
+    { name: 'archived', description: 'Kept for history.' },
+  ]}
+/>
+```
+
+<StateFlow
+  title="Document lifecycle"
+  states={[
+    { name: 'draft', description: 'Plan or work in progress.', tone: 'amber' },
+    { name: 'active', description: 'Current runtime truth.', tone: 'green' },
+    { name: 'archived', description: 'Kept for history.' },
+  ]}
+/>
+
+## Change Metadata
+
+Use `<ChangeMeta />` at the top of change records.
+
+```mdx
+<ChangeMeta date="2026-06-17" source="commit or PR" tests="npm run build" />
+```
+
+<ChangeMeta date="2026-06-17" source="commit or PR" tests="npm run build" />
+
+## Terms
+
+Use `<TermGrid />` for page-local vocabulary. The generated glossary is still
+built from frontmatter `terms`, so keep the frontmatter updated too.
+
+```mdx
+<TermGrid
+  items={[
+    { name: 'Domain', description: 'A subsystem or business area.' },
+    { name: 'Change record', description: 'Immutable record of shipped behavior.' },
+  ]}
+/>
+```
+
+<TermGrid
+  items={[
+    { name: 'Domain', description: 'A subsystem or business area.' },
+    { name: 'Change record', description: 'Immutable record of shipped behavior.' },
+  ]}
+/>

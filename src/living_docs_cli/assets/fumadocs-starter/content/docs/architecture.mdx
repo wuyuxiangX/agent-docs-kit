@@ -1,0 +1,55 @@
+---
+title: "System Architecture"
+description: "Current cross-domain architecture."
+domain: "system"
+type: "architecture"
+status: "active"
+date: "__TODAY__"
+terms:
+  - name: "Domain"
+    description: "A documentation area that maps to a subsystem, product surface, or ownership boundary."
+  - name: "Change Record"
+    description: "An immutable page that records a shipped change, its motivation, and verification."
+---
+
+# System Architecture
+
+Use this page for cross-domain architecture. Keep it current; put history in change records.
+
+<ArchMap
+  tiers={[
+    {
+      title: 'Documentation source',
+      boxes: [
+        { title: 'MDX pages', body: 'Human and agent editable source files.', tone: 'blue' },
+        { title: 'Frontmatter', body: 'Structured metadata for domains, types, dates, and terms.' },
+      ],
+    },
+    {
+      title: 'Presentation',
+      boxes: [
+        { title: 'Fumadocs', body: 'Renders navigation, search-ready pages, and MDX components.', tone: 'green' },
+      ],
+    },
+    {
+      title: 'Agent workflow',
+      boxes: [
+        { title: 'living-docs skills', body: 'Create architecture, change, plan, glossary, and check workflows.', tone: 'violet' },
+      ],
+    },
+  ]}
+/>
+
+## Maintenance Rules
+
+- Update architecture pages after meaningful system changes.
+- Create change records for shipped behavior, contracts, or architecture changes.
+- Run the glossary generator when terms change.
+- Run the check gate before committing docs changes.
+
+<TermGrid
+  items={[
+    { name: 'Domain', description: 'A documentation area that maps to a subsystem, product surface, or ownership boundary.' },
+    { name: 'Change Record', description: 'An immutable page that records a shipped change, its motivation, and verification.' },
+  ]}
+/>

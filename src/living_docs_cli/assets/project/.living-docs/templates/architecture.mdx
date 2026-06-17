@@ -1,0 +1,51 @@
+---
+title: "__TITLE__"
+description: "__DOMAIN__ architecture living document"
+domain: "__DOMAIN__"
+type: "architecture"
+status: "active"
+date: "__DATE__"
+terms:
+  - name: "__DOMAIN__"
+    description: "Replace with the subsystem responsibility in this project."
+---
+
+# __TITLE__
+
+Use this page for the current architecture of `__DOMAIN__`. Keep history in change records.
+
+<ArchMap
+  tiers={[
+    {
+      title: 'Entry points',
+      boxes: [
+        { title: 'TODO', body: 'Describe the inputs this subsystem receives.', tone: 'blue' },
+      ],
+    },
+    {
+      title: 'Core flow',
+      boxes: [
+        { title: 'TODO', body: 'Describe the main internal responsibility.' },
+      ],
+    },
+  ]}
+/>
+
+## Current Shape
+
+Document the current runtime truth: entry points, important modules, storage, external contracts, and operational constraints.
+
+<FlowSteps
+  title="Runtime path"
+  steps={[
+    { title: 'Input', body: 'Describe the request, job, event, or operator action.', tone: 'blue' },
+    { title: 'Process', body: 'Describe the main modules and state transitions.', tone: 'green' },
+    { title: 'Output', body: 'Describe persisted state, response, or side effects.', tone: 'amber' },
+  ]}
+/>
+
+<TermGrid
+  items={[
+    { name: '__DOMAIN__', description: 'Replace with the project-specific definition.' },
+  ]}
+/>

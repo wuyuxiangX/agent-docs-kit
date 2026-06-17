@@ -1,0 +1,40 @@
+---
+title: "__TITLE__"
+description: "Change record for __DOMAIN__"
+domain: "__DOMAIN__"
+type: "change"
+status: "shipped"
+date: "__DATE__"
+source: "__SOURCE__"
+tests: "__TESTS__"
+terms:
+  - name: "__DOMAIN__"
+    description: "Replace with the subsystem or concept changed here."
+---
+
+# __TITLE__
+
+<ChangeMeta date="__DATE__" source="__SOURCE__" tests="__TESTS__" />
+
+## What Changed
+
+Explain what changed and why. Focus on motivation, behavior, and trade-offs.
+
+<FlowSteps
+  title="Behavior change"
+  steps={[
+    { title: 'Before', body: 'Describe the old behavior or limitation.', tone: 'amber' },
+    { title: 'Change', body: 'Describe the shipped implementation change.', tone: 'blue' },
+    { title: 'After', body: 'Describe the new user-visible or system-visible behavior.', tone: 'green' },
+  ]}
+/>
+
+## Verification
+
+- TODO: command or live check
+
+<TermGrid
+  items={[
+    { name: '__DOMAIN__', description: 'Replace with the relevant system-specific term.' },
+  ]}
+/>

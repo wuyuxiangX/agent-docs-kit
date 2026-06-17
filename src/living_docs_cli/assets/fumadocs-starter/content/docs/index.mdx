@@ -1,0 +1,67 @@
+---
+title: "Overview"
+description: "A living documentation system powered by Fumadocs and MDX."
+type: "guide"
+---
+
+<DocsHero
+  title="__PROJECT_NAME__ Documentation"
+  description="A skills-first documentation workspace for architecture, shipped changes, future plans, and shared vocabulary."
+  primaryLabel="Open architecture"
+  primaryHref="/docs/architecture"
+  secondaryLabel="View glossary"
+  secondaryHref="/docs/glossary"
+/>
+
+This documentation system is managed by living-docs. Use MDX as the source of truth and Fumadocs as the presentation layer.
+
+Reusable documentation components are available in [Components](/docs/components).
+
+## Structure
+
+- Architecture pages describe current system shape.
+- Change pages record what changed and why.
+- Plan pages capture future design directions.
+- The glossary is generated from frontmatter `terms`.
+
+## Skills
+
+Use these project-local skills from your agent:
+
+<SkillGrid
+  items={[
+    {
+      name: 'living-docs-architecture',
+      body: 'Capture the current system shape, contracts, runtime paths, and diagrams.',
+      tone: 'blue',
+    },
+    {
+      name: 'living-docs-change',
+      body: 'Record shipped behavior changes with source files, validation, and follow-up notes.',
+      tone: 'green',
+    },
+    {
+      name: 'living-docs-plan',
+      body: 'Draft future design directions before they become committed change records.',
+      tone: 'amber',
+    },
+    {
+      name: 'living-docs-glossary',
+      body: 'Regenerate shared vocabulary from frontmatter terms across the docs.',
+      tone: 'violet',
+    },
+    {
+      name: 'living-docs-check',
+      body: 'Validate MDX health, required diagrams, generated glossary, and managed docs metadata.',
+      tone: 'red',
+    },
+  ]}
+/>
+
+The skills use these project-local scripts:
+
+```bash
+node .living-docs/scripts/create-doc.mjs change api auth-flow "Auth Flow Update"
+node .living-docs/scripts/glossary.mjs
+node .living-docs/scripts/check.mjs
+```
