@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "living-docs",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Standalone marketplace for the living-docs Fumadocs/MDX documentation system workflow.",
   "owner": {
     "name": "wuyuxiangX"
@@ -10,7 +10,7 @@
     {
       "name": "living-docs",
       "description": "Initialize and maintain a generic documentation system: Fumadocs + MDX, project-local templates/scripts, agent skills, managed context blocks, glossary generation, and validation.",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "author": {
         "name": "wuyuxiangX"
       },

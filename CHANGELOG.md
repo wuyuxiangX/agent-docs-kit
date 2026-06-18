@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.0
+
+- Added interactive `living-docs init` prompts for target project, docs directory, agent integrations, style, and overwrite behavior.
+- Added `--interactive` and `--yes` flags so humans can choose options while scripts can stay non-interactive.
+- Clarified the split between the Python bootstrap CLI and the generated Node/Fumadocs docs app.
+
 ## 2.0.0
 
 Major architecture shift from direct HTML generation to a generic documentation system.

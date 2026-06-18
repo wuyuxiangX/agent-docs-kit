@@ -10,10 +10,17 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
-VERSION = "2.0.0"
+VERSION = "2.1.0"
 PACKAGE_DIR = Path(__file__).resolve().parent
 ASSETS_DIR = PACKAGE_DIR / "assets"
 STYLE_NAMES = ("atlas",)
+INTEGRATION_ORDER = ("codex", "claude", "copilot", "cursor", "gemini", "generic")
+INTEGRATION_ALIASES = {
+    "claude-code": "claude",
+    "github": "copilot",
+    "github-copilot": "copilot",
+    "gemini-cli": "gemini",
+}
 TEXT_SUFFIXES = {
     ".css",
     ".json",
@@ -164,6 +171,99 @@ def write_json(path: Path, payload: dict, *, force: bool) -> None:
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
 
 
+def parse_integration_selection(raw: str, *, default: list[str]) -> list[str]:
+    if not raw.strip():
+        return default
+
+    selected: list[str] = []
+    tokens = [token for token in re.split(r"[\s,]+", raw.strip().lower()) if token]
+    if any(token in {"all", "*"} for token in tokens):
+        return list(INTEGRATION_ORDER)
+
+    for token in tokens:
+        if token.isdigit():
+            index = int(token) - 1
+            if index < 0 or index >= len(INTEGRATION_ORDER):
+                raise CliError(f"unknown integration number: {token}")
+            key = INTEGRATION_ORDER[index]
+        else:
+            key = INTEGRATION_ALIASES.get(token, token)
+            if key not in INTEGRATIONS:
+                raise CliError(f"unknown integration: {token}")
+
+        if key not in selected:
+            selected.append(key)
+
+    return selected
+
+
+def prompt_text(label: str, default: str) -> str:
+    suffix = f" [{default}]" if default else ""
+    value = input(f"? {label}{suffix}: ").strip()
+    return value or default
+
+
+def prompt_bool(label: str, default: bool = False) -> bool:
+    default_label = "Y/n" if default else "y/N"
+    while True:
+        value = input(f"? {label} [{default_label}]: ").strip().lower()
+        if not value:
+            return default
+        if value in {"y", "yes"}:
+            return True
+        if value in {"n", "no"}:
+            return False
+        print("  Enter y or n.")
+
+
+def prompt_integrations(default: list[str]) -> list[str]:
+    print("? Agent integrations")
+    for index, key in enumerate(INTEGRATION_ORDER, start=1):
+        integration = INTEGRATIONS[key]
+        marker = " (default)" if key in default else ""
+        print(f"  {index}. {key} - {integration.label}{marker}")
+    print("  Enter names or numbers separated by commas, or 'all'.")
+
+    while True:
+        raw = input(f"  Selection [{', '.join(default)}]: ")
+        try:
+            return parse_integration_selection(raw, default=default)
+        except CliError as exc:
+            print(f"  {exc}")
+
+
+def should_prompt_init(args: argparse.Namespace) -> bool:
+    if args.yes:
+        return False
+    if args.interactive:
+        return True
+    return (
+        sys.stdin.isatty()
+        and args.target is None
+        and args.integration is None
+        and args.docs_dir == "docs"
+        and args.style == "atlas"
+        and not args.force
+    )
+
+
+def collect_interactive_init_args(args: argparse.Namespace) -> None:
+    if not sys.stdin.isatty():
+        raise CliError("--interactive requires an interactive terminal")
+
+    print("living-docs init")
+    args.target = prompt_text("Target project", args.target or ".")
+    args.docs_dir = prompt_text("Docs directory", args.docs_dir)
+    args.integration = prompt_integrations(args.integration or ["codex"])
+    args.style = prompt_text("Style", args.style)
+    if args.style not in STYLE_NAMES:
+        raise CliError(
+            "unknown style: " + args.style + f". Available: {', '.join(STYLE_NAMES)}"
+        )
+    args.force = prompt_bool("Overwrite existing managed files if needed?", args.force)
+    print()
+
+
 def skill_lines(integration: Integration) -> str:
     names = [
         ("living-docs-write", "route general documentation requests"),
@@ -225,11 +325,15 @@ def upsert_context_file(project_root: Path, rel_path: str, block: str, *, preamb
 
 
 def init_project(args: argparse.Namespace) -> int:
+    if should_prompt_init(args):
+        collect_interactive_init_args(args)
+
     if args.framework != "fumadocs":
         raise CliError("only --framework fumadocs is currently supported")
 
-    target = Path(args.target).expanduser()
-    if args.target == ".":
+    target_arg = args.target or "."
+    target = Path(target_arg).expanduser()
+    if target_arg == ".":
         target = Path.cwd()
     target = target.resolve()
     if target.exists() and not target.is_dir():
@@ -242,7 +346,7 @@ def init_project(args: argparse.Namespace) -> int:
         raise CliError(
             "unknown integration(s): "
             + ", ".join(unknown)
-            + f". Available: {', '.join(INTEGRATIONS)}"
+            + f". Available: {', '.join(INTEGRATION_ORDER)}"
         )
 
     docs_dir = args.docs_dir.strip().strip("/")
@@ -443,9 +547,11 @@ def skills_command(_: argparse.Namespace) -> int:
     print("living-docs skills")
     print()
     print("CLI:")
+    print("  living-docs init")
     print("  living-docs init [target] --integration codex --integration claude")
     print("  living-docs init . --integration codex --integration cursor --integration gemini")
-    print("  living-docs init . --style atlas --docs-dir docs --force")
+    print("  living-docs init . --docs-dir docs --style atlas --yes")
+    print("  living-docs init . --style atlas --interactive")
     print("  living-docs check")
     print("  living-docs skills")
     print("  living-docs styles")
@@ -495,8 +601,9 @@ def styles_command(_: argparse.Namespace) -> int:
     print("  atlas  product documentation with clear hierarchy")
     print()
     print("Use:")
-    print("  living-docs init .")
-    print("  living-docs init . --style atlas --force")
+    print("  living-docs init")
+    print("  living-docs init . --style atlas --interactive")
+    print("  living-docs init . --style atlas --yes")
     return 0
 
 
@@ -530,7 +637,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
 
     init = sub.add_parser("init", help="initialize a Fumadocs documentation system")
-    init.add_argument("target", nargs="?", default=".", help="project directory or '.'")
+    init.add_argument("target", nargs="?", default=None, help="project directory or '.'")
     init.add_argument("--framework", default="fumadocs", choices=["fumadocs"])
     init.add_argument(
         "--integration",
@@ -541,6 +648,8 @@ def build_parser() -> argparse.ArgumentParser:
     init.add_argument("--docs-dir", default="docs", help="project-relative docs app directory")
     init.add_argument("--style", default="atlas", choices=STYLE_NAMES, help="visual style preset")
     init.add_argument("--force", action="store_true", help="overwrite managed files")
+    init.add_argument("--interactive", action="store_true", help="prompt for init options")
+    init.add_argument("-y", "--yes", action="store_true", help="accept defaults and skip prompts")
     init.set_defaults(func=init_project)
 
     check = sub.add_parser("check", help="validate a living-docs project")

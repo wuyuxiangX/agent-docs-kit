@@ -2,7 +2,7 @@
 
 Generic documentation system for agent-assisted projects.
 
-living-docs bootstraps a Fumadocs + MDX documentation app, project-local scaffolding scripts, reusable MDX templates, and agent skills for Codex, Claude Code, Copilot, or a generic agent directory.
+living-docs bootstraps a Fumadocs + MDX documentation app, project-local scaffolding scripts, reusable MDX templates, and agent skills for Codex, Claude Code, Copilot, Cursor, Gemini CLI, or a generic agent directory.
 
 living-docs is skills-first. It installs `SKILL.md` workflow skills into the
 target project instead of installing slash-command prompt files.
@@ -14,33 +14,57 @@ The model follows the same separation that makes tools like Spec Kit scale:
 - **Agent skills**: handle day-to-day authoring workflows.
 - **Fumadocs**: render and organize the docs site.
 
+The CLI is a small Python bootstrapper so it can be run with `uvx` without
+requiring Node in the source package. The generated documentation app is still
+Node/Fumadocs: after init, previewing, type-checking, and building docs happens
+inside the generated `docs/` app with npm.
+
 ## Install
 
 One-time usage:
 
 ```bash
-uvx --from git+https://github.com/wuyuxiangX/living-docs.git living-docs init .
+uvx --from git+https://github.com/wuyuxiangX/living-docs.git living-docs init
 ```
 
 Persistent install:
 
 ```bash
 uv tool install git+https://github.com/wuyuxiangX/living-docs.git
-living-docs init .
+living-docs init
 ```
 
-Initialize with explicit integrations:
+`living-docs init` is interactive in a terminal:
+
+```text
+? Target project [.]:
+? Docs directory [docs]:
+? Agent integrations
+  1. codex - Codex (default)
+  2. claude - Claude Code
+  3. copilot - GitHub Copilot
+  4. cursor - Cursor
+  5. gemini - Gemini CLI
+  6. generic - Generic
+  Enter names or numbers separated by commas, or 'all'.
+  Selection [codex]:
+? Style [atlas]:
+? Overwrite existing managed files if needed? [y/N]:
+```
+
+Use explicit flags for scripts or CI:
 
 ```bash
 living-docs init . --integration codex
 living-docs init . --integration codex --integration claude --integration copilot
 living-docs init . --integration codex --integration cursor --integration gemini
+living-docs init . --integration codex --docs-dir docs --style atlas --yes
 ```
 
 The starter uses the `atlas` style by default:
 
 ```bash
-living-docs init . --style atlas
+living-docs init . --style atlas --interactive
 living-docs styles
 ```
 
@@ -216,8 +240,9 @@ Fumadocs reads MDX from `docs/content/docs`.
 ## CLI
 
 ```bash
-living-docs init [target] [--integration codex|claude|copilot|cursor|gemini|generic] [--docs-dir docs] [--force]
-living-docs init . --style atlas
+living-docs init
+living-docs init [target] [--integration codex|claude|copilot|cursor|gemini|generic] [--docs-dir docs] [--force] [--yes]
+living-docs init . --style atlas --interactive
 living-docs check
 living-docs skills
 living-docs styles
