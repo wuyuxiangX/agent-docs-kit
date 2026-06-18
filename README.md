@@ -227,6 +227,31 @@ npm run dev -- --port 3333
 
 Fumadocs reads MDX from `docs/content/docs`.
 
+## Publish to PyPI
+
+Releases are published from GitHub Actions with PyPI Trusted Publishing. This
+avoids long-lived PyPI API tokens in the repository or on a local machine.
+
+One-time PyPI setup for a new package:
+
+1. Open <https://pypi.org/manage/account/publishing/>.
+2. Add a pending GitHub Actions publisher with:
+   - PyPI project name: `living-docs`
+   - Owner: `wuyuxiangX`
+   - Repository name: `living-docs`
+   - Workflow filename: `publish.yml`
+   - Environment name: `pypi`
+
+After that, publish a release by tagging the commit:
+
+```bash
+git tag -a v2.1.0 -m v2.1.0
+git push origin v2.1.0
+```
+
+The workflow builds the Python package with `uv build` and uploads the
+distribution files to PyPI.
+
 ## Authoring Contract
 
 - MDX is the source of truth.
