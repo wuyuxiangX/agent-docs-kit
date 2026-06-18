@@ -8,11 +8,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wuyuxiangX/living-docs.git"
+    "url": "git+https://github.com/wuyuxiangX/agent-docs-kit.git"
   },
-  "homepage": "https://github.com/wuyuxiangX/living-docs",
+  "homepage": "https://github.com/wuyuxiangX/agent-docs-kit",
   "bugs": {
-    "url": "https://github.com/wuyuxiangX/living-docs/issues"
+    "url": "https://github.com/wuyuxiangX/agent-docs-kit/issues"
   },
   "keywords": [
     "agent-skill",

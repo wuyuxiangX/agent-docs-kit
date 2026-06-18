@@ -25,9 +25,9 @@ agent-docs-kit = "living_docs_cli:main"
 living-docs = "living_docs_cli:main"
 
 [project.urls]
-Homepage = "https://github.com/wuyuxiangX/living-docs"
-Repository = "https://github.com/wuyuxiangX/living-docs"
-Issues = "https://github.com/wuyuxiangX/living-docs/issues"
+Homepage = "https://github.com/wuyuxiangX/agent-docs-kit"
+Repository = "https://github.com/wuyuxiangX/agent-docs-kit"
+Issues = "https://github.com/wuyuxiangX/agent-docs-kit/issues"
 
 [build-system]
 requires = ["hatchling"]

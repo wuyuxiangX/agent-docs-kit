@@ -1,10 +1,10 @@
-# living-docs
+# agent-docs-kit
 
 Generic documentation system for agent-assisted projects.
 
-living-docs bootstraps a Fumadocs + MDX documentation app, project-local scaffolding scripts, reusable MDX templates, and agent skills for Codex, Claude Code, Copilot, Cursor, Gemini CLI, or a generic agent directory.
+agent-docs-kit bootstraps a Fumadocs + MDX documentation app, project-local scaffolding scripts, reusable MDX templates, and agent skills for Codex, Claude Code, Copilot, Cursor, Gemini CLI, or a generic agent directory.
 
-living-docs is skills-first. It installs `SKILL.md` workflow skills into the
+agent-docs-kit is skills-first. It installs `SKILL.md` workflow skills into the
 target project instead of installing slash-command prompt files.
 
 The model follows the same separation that makes tools like Spec Kit scale:
@@ -243,7 +243,7 @@ One-time PyPI setup for a new package:
 2. Add a pending GitHub Actions publisher with:
    - PyPI project name: `agent-docs-kit`
    - Owner: `wuyuxiangX`
-   - Repository name: `living-docs`
+   - Repository name: `agent-docs-kit`
    - Workflow filename: `publish.yml`
    - Environment name: `pypi`
 

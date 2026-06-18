@@ -4,7 +4,7 @@
 
 - Added interactive `living-docs init` prompts for target project, docs directory, agent integrations, style, and overwrite behavior.
 - Added `--interactive` and `--yes` flags so humans can choose options while scripts can stay non-interactive.
-- Renamed the PyPI distribution to `agent-docs-kit` because `living-docs` is blocked by PyPI's project-name similarity checks. The `living-docs` CLI command remains available.
+- Renamed the public distribution and repository identity to `agent-docs-kit` because `living-docs` is blocked by PyPI's project-name similarity checks. The `living-docs` CLI command remains available.
 - Clarified the split between the Python bootstrap CLI and the generated Node/Fumadocs docs app.
 
 ## 2.0.0

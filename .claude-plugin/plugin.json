@@ -1,11 +1,11 @@
 {
-  "name": "living-docs",
+  "name": "agent-docs-kit",
   "version": "2.1.0",
   "description": "Bootstrap and maintain a generic Fumadocs + MDX documentation system with project-local scripts, agent skills, managed context blocks, glossary generation, and validation.",
   "author": {
     "name": "wuyuxiangX"
   },
-  "homepage": "https://github.com/wuyuxiangX/living-docs",
+  "homepage": "https://github.com/wuyuxiangX/agent-docs-kit",
   "license": "MIT",
   "keywords": [
     "living-docs",
