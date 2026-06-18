@@ -24,17 +24,21 @@ inside the generated `docs/` app with npm.
 One-time usage:
 
 ```bash
-uvx --from git+https://github.com/wuyuxiangX/living-docs.git living-docs init
+uvx yudocs init
 ```
 
 Persistent install:
 
 ```bash
-uv tool install git+https://github.com/wuyuxiangX/living-docs.git
-living-docs init
+uv tool install yudocs
+yudocs init
 ```
 
-`living-docs init` is interactive in a terminal:
+The PyPI distribution is named `yudocs` because `living-docs` is blocked by
+PyPI's project-name similarity checks. It still installs both CLI commands:
+`yudocs` and `living-docs`.
+
+`yudocs init` is interactive in a terminal:
 
 ```text
 ? Target project [.]:
@@ -55,17 +59,17 @@ living-docs init
 Use explicit flags for scripts or CI:
 
 ```bash
-living-docs init . --integration codex
-living-docs init . --integration codex --integration claude --integration copilot
-living-docs init . --integration codex --integration cursor --integration gemini
-living-docs init . --integration codex --docs-dir docs --style atlas --yes
+yudocs init . --integration codex
+yudocs init . --integration codex --integration claude --integration copilot
+yudocs init . --integration codex --integration cursor --integration gemini
+yudocs init . --integration codex --docs-dir docs --style atlas --yes
 ```
 
 The starter uses the `atlas` style by default:
 
 ```bash
-living-docs init . --style atlas --interactive
-living-docs styles
+yudocs init . --style atlas --interactive
+yudocs styles
 ```
 
 ## Supported Agent Platforms
@@ -90,8 +94,9 @@ support multiple agents without duplicating the portable workflow files.
 
 ## User Paths
 
-There is one bootstrap path: install the CLI, then run `living-docs init` in
-the target project. The project-local skills are generated during init.
+There is one bootstrap path: install the CLI, then run `yudocs init` or
+`living-docs init` in the target project. The project-local skills are generated
+during init.
 
 ```text
 <project>/.living-docs/
@@ -106,7 +111,7 @@ the target project. The project-local skills are generated during init.
 
 The per-project workflow skills live in the CLI assets under
 `src/living_docs_cli/assets/workflow-skills/` and are copied into each target
-project during `living-docs init`, so they can use that project's
+project during `init`, so they can use that project's
 `.living-docs/config.json`, templates, scripts, and context file. There is no
 separate global `living-docs` helper skill.
 
@@ -214,7 +219,7 @@ built-in components.
 The global CLI can also validate the project:
 
 ```bash
-living-docs check
+yudocs check
 ```
 
 ## Run the Docs Site
@@ -236,7 +241,7 @@ One-time PyPI setup for a new package:
 
 1. Open <https://pypi.org/manage/account/publishing/>.
 2. Add a pending GitHub Actions publisher with:
-   - PyPI project name: `living-docs`
+   - PyPI project name: `yudocs`
    - Owner: `wuyuxiangX`
    - Repository name: `living-docs`
    - Workflow filename: `publish.yml`
@@ -265,14 +270,14 @@ distribution files to PyPI.
 ## CLI
 
 ```bash
-living-docs init
-living-docs init [target] [--integration codex|claude|copilot|cursor|gemini|generic] [--docs-dir docs] [--force] [--yes]
-living-docs init . --style atlas --interactive
-living-docs check
-living-docs skills
-living-docs styles
-living-docs version
-living-docs self check
+yudocs init
+yudocs init [target] [--integration codex|claude|copilot|cursor|gemini|generic] [--docs-dir docs] [--force] [--yes]
+yudocs init . --style atlas --interactive
+yudocs check
+yudocs skills
+yudocs styles
+yudocs version
+yudocs self check
 ```
 
 ## License

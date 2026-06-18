@@ -1,5 +1,5 @@
 [project]
-name = "living-docs"
+name = "yudocs"
 version = "2.1.0"
 description = "Bootstrap and maintain a Fumadocs-powered MDX documentation system with agent skills, reusable templates, and validation."
 requires-python = ">=3.10"
@@ -22,6 +22,7 @@ keywords = [
 
 [project.scripts]
 living-docs = "living_docs_cli:main"
+yudocs = "living_docs_cli:main"
 
 [project.urls]
 Homepage = "https://github.com/wuyuxiangX/living-docs"
