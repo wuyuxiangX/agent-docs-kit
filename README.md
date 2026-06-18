@@ -24,21 +24,21 @@ inside the generated `docs/` app with npm.
 One-time usage:
 
 ```bash
-uvx yudocs init
+uvx agent-docs-kit init
 ```
 
 Persistent install:
 
 ```bash
-uv tool install yudocs
-yudocs init
+uv tool install agent-docs-kit
+agent-docs-kit init
 ```
 
-The PyPI distribution is named `yudocs` because `living-docs` is blocked by
-PyPI's project-name similarity checks. It still installs both CLI commands:
-`yudocs` and `living-docs`.
+The PyPI distribution is named `agent-docs-kit` because `living-docs` is blocked
+by PyPI's project-name similarity checks. It still installs both CLI commands:
+`agent-docs-kit` and `living-docs`.
 
-`yudocs init` is interactive in a terminal:
+`agent-docs-kit init` is interactive in a terminal:
 
 ```text
 ? Target project [.]:
@@ -59,17 +59,17 @@ PyPI's project-name similarity checks. It still installs both CLI commands:
 Use explicit flags for scripts or CI:
 
 ```bash
-yudocs init . --integration codex
-yudocs init . --integration codex --integration claude --integration copilot
-yudocs init . --integration codex --integration cursor --integration gemini
-yudocs init . --integration codex --docs-dir docs --style atlas --yes
+agent-docs-kit init . --integration codex
+agent-docs-kit init . --integration codex --integration claude --integration copilot
+agent-docs-kit init . --integration codex --integration cursor --integration gemini
+agent-docs-kit init . --integration codex --docs-dir docs --style atlas --yes
 ```
 
 The starter uses the `atlas` style by default:
 
 ```bash
-yudocs init . --style atlas --interactive
-yudocs styles
+agent-docs-kit init . --style atlas --interactive
+agent-docs-kit styles
 ```
 
 ## Supported Agent Platforms
@@ -94,7 +94,7 @@ support multiple agents without duplicating the portable workflow files.
 
 ## User Paths
 
-There is one bootstrap path: install the CLI, then run `yudocs init` or
+There is one bootstrap path: install the CLI, then run `agent-docs-kit init` or
 `living-docs init` in the target project. The project-local skills are generated
 during init.
 
@@ -219,7 +219,7 @@ built-in components.
 The global CLI can also validate the project:
 
 ```bash
-yudocs check
+agent-docs-kit check
 ```
 
 ## Run the Docs Site
@@ -241,7 +241,7 @@ One-time PyPI setup for a new package:
 
 1. Open <https://pypi.org/manage/account/publishing/>.
 2. Add a pending GitHub Actions publisher with:
-   - PyPI project name: `yudocs`
+   - PyPI project name: `agent-docs-kit`
    - Owner: `wuyuxiangX`
    - Repository name: `living-docs`
    - Workflow filename: `publish.yml`
@@ -270,14 +270,14 @@ distribution files to PyPI.
 ## CLI
 
 ```bash
-yudocs init
-yudocs init [target] [--integration codex|claude|copilot|cursor|gemini|generic] [--docs-dir docs] [--force] [--yes]
-yudocs init . --style atlas --interactive
-yudocs check
-yudocs skills
-yudocs styles
-yudocs version
-yudocs self check
+agent-docs-kit init
+agent-docs-kit init [target] [--integration codex|claude|copilot|cursor|gemini|generic] [--docs-dir docs] [--force] [--yes]
+agent-docs-kit init . --style atlas --interactive
+agent-docs-kit check
+agent-docs-kit skills
+agent-docs-kit styles
+agent-docs-kit version
+agent-docs-kit self check
 ```
 
 ## License

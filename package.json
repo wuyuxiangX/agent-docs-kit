@@ -1,5 +1,5 @@
 {
-  "name": "yudocs",
+  "name": "agent-docs-kit",
   "version": "2.1.0",
   "description": "Bootstrap a generic Fumadocs + MDX documentation system with project-local scripts, agent skills, managed context blocks, glossary generation, and validation.",
   "license": "MIT",
