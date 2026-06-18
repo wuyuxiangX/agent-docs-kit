@@ -15,7 +15,9 @@ keywords = [
   "fumadocs",
   "mdx",
   "codex",
-  "claude-code"
+  "claude-code",
+  "cursor",
+  "gemini-cli"
 ]
 
 [project.scripts]

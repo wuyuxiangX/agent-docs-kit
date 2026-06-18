@@ -1,11 +1,20 @@
 ---
 name: living-docs-architecture
-description: Create or update architecture MDX pages in a living-docs Fumadocs project. Use when current architecture, system shape, subsystem boundaries, data flow, runtime chain, or architecture diagrams need documentation.
+description: Create or update architecture MDX pages in a living-docs Fumadocs project. Use whenever current architecture, system shape, subsystem boundaries, data flow, runtime chain, contracts, ownership, or architecture diagrams need documentation or correction.
 ---
 
 # living-docs-architecture
 
-Use this skill only inside a project that has `.living-docs/config.json`.
+Use this skill only inside a project that has `.living-docs/config.json`. If that file is missing, tell the user to run `living-docs init` first.
+
+Architecture pages describe current runtime truth. They should not become historical changelogs or future plans.
+
+## Source Priority
+
+1. `.living-docs/config.json` for docs location and project settings.
+2. Existing MDX pages under the configured `contentDir`.
+3. Source files, routes, schemas, config, tests, logs, traces, or rendered runtime surfaces that prove the current shape.
+4. User-provided context, marked as unverified when it has not been checked against the repo or runtime.
 
 ## Workflow
 
@@ -37,4 +46,10 @@ node .living-docs/scripts/glossary.mjs
 node .living-docs/scripts/check.mjs
 ```
 
-Report the architecture page path and validation result.
+## Write Safety
+
+- Do not document aspirational behavior as current architecture.
+- If the current shape differs from an existing page, update the architecture page and consider whether a separate change record is needed.
+- If a diagram would be speculative, write the uncertainty explicitly or inspect more code before adding it.
+
+Report the architecture page path, key source files or runtime evidence used, and validation result.

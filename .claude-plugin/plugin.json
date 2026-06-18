@@ -15,6 +15,8 @@
     "agent-skill",
     "claude-code",
     "codex",
-    "copilot"
+    "copilot",
+    "cursor",
+    "gemini-cli"
   ]
 }

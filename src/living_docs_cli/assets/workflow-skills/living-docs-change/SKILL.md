@@ -1,11 +1,20 @@
 ---
 name: living-docs-change
-description: Record shipped changes in a living-docs Fumadocs project. Use after refactors, features, contract changes, architecture changes, or operational fixes that need an immutable paper trail.
+description: Record shipped changes in a living-docs Fumadocs project. Use after refactors, features, bug fixes, API or data-contract changes, architecture changes, migrations, deploy changes, or operational fixes that need an immutable paper trail.
 ---
 
 # living-docs-change
 
-Use this skill only inside a project that has `.living-docs/config.json`.
+Use this skill only inside a project that has `.living-docs/config.json`. If that file is missing, tell the user to run `living-docs init` first.
+
+Change records are immutable shipped-history pages. They should explain what changed, why it changed, and how it was verified. They are not the place for unshipped plans.
+
+## Source Priority
+
+1. `.living-docs/config.json` for docs location and project settings.
+2. Git diff, commits, changed source files, migrations, config, tests, logs, or runtime checks that prove the shipped change.
+3. Existing architecture pages that may need to be updated to match the new current state.
+4. User-provided context, marked as unverified when it has not been checked against the repo or runtime.
 
 ## Workflow
 
@@ -44,4 +53,10 @@ node .living-docs/scripts/glossary.mjs
 node .living-docs/scripts/check.mjs
 ```
 
-Report the change page, any architecture page touched, and validation result.
+## Write Safety
+
+- Do not record a change as shipped if it is only proposed or partially implemented.
+- Do not rewrite old change records to change history; create a new record for a new shipped correction.
+- If the current architecture changed, update the relevant architecture page in the same pass.
+
+Report the change page, any architecture page touched, the evidence used, and validation result.

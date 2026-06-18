@@ -25,7 +25,7 @@ uvx --from git+https://github.com/wuyuxiangX/living-docs.git living-docs init .
 Persistent install:
 
 ```bash
-uv tool install living-docs --from git+https://github.com/wuyuxiangX/living-docs.git
+uv tool install git+https://github.com/wuyuxiangX/living-docs.git
 living-docs init .
 ```
 
@@ -34,6 +34,7 @@ Initialize with explicit integrations:
 ```bash
 living-docs init . --integration codex
 living-docs init . --integration codex --integration claude --integration copilot
+living-docs init . --integration codex --integration cursor --integration gemini
 ```
 
 The starter uses the `atlas` style by default:
@@ -42,6 +43,26 @@ The starter uses the `atlas` style by default:
 living-docs init . --style atlas
 living-docs styles
 ```
+
+## Supported Agent Platforms
+
+living-docs installs the same workflow skills into the best available
+instruction surface for each agent. Native skill platforms get direct skill
+folders; other agents get portable `SKILL.md` workflow files plus a project
+context file that points to them.
+
+| Integration | Context file | Workflow files |
+| --- | --- | --- |
+| `codex` | `AGENTS.md` | `.agents/skills/living-docs-*` |
+| `claude` | `CLAUDE.md` | `.claude/skills/living-docs-*` |
+| `copilot` | `.github/copilot-instructions.md` | `.github/skills/living-docs-*` |
+| `cursor` | `.cursor/rules/living-docs.mdc` | `.living-docs/skills/living-docs-*` |
+| `gemini` | `GEMINI.md` | `.living-docs/skills/living-docs-*` |
+| `generic` | `.living-docs/AGENT_CONTEXT.md` | `.living-docs/skills/living-docs-*` |
+
+You can repeat `--integration` to install several surfaces in one project.
+`cursor`, `gemini`, and `generic` share `.living-docs/skills`, so a project can
+support multiple agents without duplicating the portable workflow files.
 
 ## User Paths
 
@@ -54,6 +75,9 @@ the target project. The project-local skills are generated during init.
 <project>/.agents/skills/living-docs-*   # Codex integration
 <project>/.claude/skills/living-docs-*    # Claude integration
 <project>/.github/skills/living-docs-*    # Copilot integration
+<project>/.cursor/rules/living-docs.mdc   # Cursor integration
+<project>/GEMINI.md                       # Gemini CLI integration
+<project>/.living-docs/skills/living-docs-* # Portable workflows
 ```
 
 The per-project workflow skills live in the CLI assets under
@@ -88,6 +112,9 @@ docs/
 .agents/skills/                 # codex integration
 .claude/skills/                 # claude integration
 .github/skills/                 # copilot skills mode
+.cursor/rules/living-docs.mdc   # cursor integration
+GEMINI.md                       # gemini integration
+.living-docs/skills/            # portable workflow skills
 AGENTS.md / CLAUDE.md / ...     # managed living-docs context block
 ```
 
@@ -105,6 +132,7 @@ Re-running init replaces only that block and preserves surrounding project instr
 
 Use generated skills from your agent:
 
+- `living-docs-write` for routing a general docs request to the right workflow
 - `living-docs-architecture` for current architecture docs
 - `living-docs-change` for shipped change records
 - `living-docs-plan` for future design plans
@@ -188,7 +216,7 @@ Fumadocs reads MDX from `docs/content/docs`.
 ## CLI
 
 ```bash
-living-docs init [target] [--integration codex|claude|copilot|generic] [--docs-dir docs] [--force]
+living-docs init [target] [--integration codex|claude|copilot|cursor|gemini|generic] [--docs-dir docs] [--force]
 living-docs init . --style atlas
 living-docs check
 living-docs skills

@@ -1,11 +1,13 @@
 ---
 name: living-docs-write
-description: General entrypoint for creating or updating living-docs MDX documentation in a project initialized with living-docs. Use when the user asks to write docs, update docs, explain an architecture, record a change, draft a plan, or maintain the Fumadocs documentation system.
+description: General entrypoint for creating or updating living-docs MDX documentation in a project initialized with living-docs. Use whenever the user asks to write docs, update docs, explain current architecture, record a shipped change, draft a future plan, refresh glossary terms, validate docs health, or maintain the generated Fumadocs documentation system.
 ---
 
 # living-docs-write
 
-Use this skill only inside a project that has `.living-docs/config.json`.
+Use this skill only inside a project that has `.living-docs/config.json`. If that file is missing, tell the user to run `living-docs init` before writing living-docs content.
+
+This is the portable entrypoint for agents that do not have native slash or skill invocation. For Codex, Claude Code, and similar skill-aware agents, route to the named living-docs skill directly when it is available. For Cursor, Gemini CLI, Copilot, or generic agents, read the matching `SKILL.md` file from the installed workflow directory before editing docs.
 
 ## Routine
 
@@ -25,7 +27,14 @@ Use this skill only inside a project that has `.living-docs/config.json`.
    - `<TermGrid />` for page-local vocabulary.
 6. Match the language and tone of the existing docs unless the user asks otherwise.
 
-## Required Finish
+## Write Safety
+
+- Do not invent architecture or verification details. Inspect source files, diffs, tests, logs, or the runtime surface first.
+- Do not overwrite an existing MDX page unless the user asked to update that page or the selected workflow clearly targets it.
+- Keep historical facts in change records, current facts in architecture pages, and future intent in plan pages.
+- If the request mixes shipped facts and future intent, create or update separate change and plan pages instead of blending them.
+
+## Finish Gate
 
 Run one of:
 

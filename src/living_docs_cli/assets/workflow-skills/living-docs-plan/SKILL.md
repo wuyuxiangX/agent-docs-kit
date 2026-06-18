@@ -1,11 +1,20 @@
 ---
 name: living-docs-plan
-description: Create or update future plans, blueprints, and design direction MDX pages in a living-docs Fumadocs project. Use when documenting intended work before it ships.
+description: Create or update future plans, blueprints, design direction, implementation plans, or proposal MDX pages in a living-docs Fumadocs project. Use when documenting intended work before it ships or when the user wants a plan separated from current architecture and shipped change records.
 ---
 
 # living-docs-plan
 
-Use this skill only inside a project that has `.living-docs/config.json`.
+Use this skill only inside a project that has `.living-docs/config.json`. If that file is missing, tell the user to run `living-docs init` first.
+
+Plan pages describe future intent. They should be explicit about scope, assumptions, validation, and open questions.
+
+## Source Priority
+
+1. `.living-docs/config.json` for docs location and project settings.
+2. Existing architecture and change pages under the configured `contentDir`.
+3. Source files, APIs, schemas, config, tests, or runtime surfaces that constrain the proposed work.
+4. User-provided goals and constraints.
 
 ## Workflow
 
@@ -37,4 +46,10 @@ node .living-docs/scripts/glossary.mjs
 node .living-docs/scripts/check.mjs
 ```
 
-Report the plan page path and validation result.
+## Write Safety
+
+- Do not present a plan as current architecture or shipped behavior.
+- Keep speculative details clearly labeled as assumptions or open questions.
+- If a plan depends on unknown runtime behavior, add a validation task instead of guessing.
+
+Report the plan page path, major assumptions, open questions, and validation result.

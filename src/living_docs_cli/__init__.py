@@ -37,6 +37,8 @@ class Integration:
     skills_dir: str
     context_file: str
     next_step: str
+    invocation_prefix: str | None = None
+    context_preamble: str = ""
 
 
 INTEGRATIONS = {
@@ -46,6 +48,7 @@ INTEGRATIONS = {
         skills_dir=".agents/skills",
         context_file="AGENTS.md",
         next_step="Start Codex in this project and invoke skills such as $living-docs-change.",
+        invocation_prefix="$",
     ),
     "claude": Integration(
         key="claude",
@@ -53,6 +56,7 @@ INTEGRATIONS = {
         skills_dir=".claude/skills",
         context_file="CLAUDE.md",
         next_step="Start Claude Code in this project and invoke skills such as /living-docs-change.",
+        invocation_prefix="/",
     ),
     "copilot": Integration(
         key="copilot",
@@ -67,6 +71,26 @@ INTEGRATIONS = {
         skills_dir=".living-docs/skills",
         context_file=".living-docs/AGENT_CONTEXT.md",
         next_step="Read .living-docs/skills for portable skill instructions.",
+    ),
+    "cursor": Integration(
+        key="cursor",
+        label="Cursor",
+        skills_dir=".living-docs/skills",
+        context_file=".cursor/rules/living-docs.mdc",
+        next_step="Open the project in Cursor; the project rule points to .living-docs/skills.",
+        context_preamble=(
+            "---\n"
+            "description: Use living-docs workflows when creating or maintaining project documentation\n"
+            "alwaysApply: false\n"
+            "---\n\n"
+        ),
+    ),
+    "gemini": Integration(
+        key="gemini",
+        label="Gemini CLI",
+        skills_dir=".living-docs/skills",
+        context_file="GEMINI.md",
+        next_step="Start Gemini CLI in this project; GEMINI.md points to .living-docs/skills.",
     ),
 }
 
@@ -140,8 +164,25 @@ def write_json(path: Path, payload: dict, *, force: bool) -> None:
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
 
 
+def skill_lines(integration: Integration) -> str:
+    names = [
+        ("living-docs-write", "route general documentation requests"),
+        ("living-docs-architecture", "document current architecture"),
+        ("living-docs-change", "record shipped changes"),
+        ("living-docs-plan", "draft future plans"),
+        ("living-docs-glossary", "regenerate glossary"),
+        ("living-docs-check", "validate documentation health"),
+    ]
+    lines: list[str] = []
+    for name, purpose in names:
+        if integration.invocation_prefix:
+            lines.append(f"- `{integration.invocation_prefix}{name}` to {purpose}")
+        else:
+            lines.append(f"- `{integration.skills_dir}/{name}/SKILL.md` to {purpose}")
+    return "\n".join(lines)
+
+
 def context_block(*, docs_dir: str, integration: Integration) -> str:
-    skill_prefix = "$" if integration.key == "codex" else "/"
     return f"""{CONTEXT_START}
 This project uses living-docs for its documentation system.
 
@@ -151,13 +192,10 @@ Documentation system:
 - Content source: `{docs_dir}/content/docs/`
 - Project config: `.living-docs/config.json`
 - Managed scripts: `.living-docs/scripts/`
+- Workflow skill files: `{integration.skills_dir}/living-docs-*/SKILL.md`
 
 Use living-docs skills when the user asks to create or update project documentation:
-- `{skill_prefix}living-docs-architecture` for current architecture pages
-- `{skill_prefix}living-docs-change` for shipped change records
-- `{skill_prefix}living-docs-plan` for future plans or blueprints
-- `{skill_prefix}living-docs-glossary` after terms change
-- `{skill_prefix}living-docs-check` before committing docs changes
+{skill_lines(integration)}
 
 Keep MDX as the source of truth. Do not hand-edit generated HTML output.
 Run `node .living-docs/scripts/check.mjs` or `living-docs check` before treating docs work as complete.
@@ -165,13 +203,13 @@ Run `node .living-docs/scripts/check.mjs` or `living-docs check` before treating
 """
 
 
-def upsert_context_file(project_root: Path, rel_path: str, block: str) -> Path:
+def upsert_context_file(project_root: Path, rel_path: str, block: str, *, preamble: str = "") -> Path:
     path = project_root / rel_path
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         original = path.read_text()
     else:
-        original = ""
+        original = preamble
 
     pattern = re.compile(
         re.escape(CONTEXT_START) + r".*?" + re.escape(CONTEXT_END) + r"\n?",
@@ -255,19 +293,23 @@ def init_project(args: argparse.Namespace) -> int:
     write_json(target / ".living-docs" / "config.json", config, force=args.force)
 
     skill_src = ASSETS_DIR / "workflow-skills"
+    installed_skill_dirs: set[str] = set()
     for integration_name in integrations:
         integration = INTEGRATIONS[integration_name]
-        written += copy_asset_tree(
-            skill_src,
-            target / integration.skills_dir,
-            variables=variables,
-            force=args.force,
-        )
+        if integration.skills_dir not in installed_skill_dirs:
+            written += copy_asset_tree(
+                skill_src,
+                target / integration.skills_dir,
+                variables=variables,
+                force=args.force,
+            )
+            installed_skill_dirs.add(integration.skills_dir)
         written.append(
             upsert_context_file(
                 target,
                 integration.context_file,
                 context_block(docs_dir=docs_dir, integration=integration),
+                preamble=integration.context_preamble,
             )
         )
 
@@ -354,9 +396,15 @@ def check_project(args: argparse.Namespace) -> int:
             errors.append(f"{rel}: architecture pages should set type: architecture")
 
         if doc_type in {"architecture", "change"}:
-            has_component_diagram = "<ArchMap" in text or "```mermaid" in text
+            has_component_diagram = any(
+                marker in text
+                for marker in ("<ArchMap", "<FlowSteps", "<StateFlow", "```mermaid")
+            )
             if not has_component_diagram:
-                errors.append(f"{rel}: architecture/change docs need <ArchMap /> or a mermaid block")
+                errors.append(
+                    f"{rel}: architecture/change docs need <ArchMap />, <FlowSteps />, "
+                    "<StateFlow />, or a mermaid block"
+                )
 
         if doc_type in {"architecture", "change", "plan"}:
             if "terms:" not in text and "<TermGrid" not in text:
@@ -396,6 +444,7 @@ def skills_command(_: argparse.Namespace) -> int:
     print()
     print("CLI:")
     print("  living-docs init [target] --integration codex --integration claude")
+    print("  living-docs init . --integration codex --integration cursor --integration gemini")
     print("  living-docs init . --style atlas --docs-dir docs --force")
     print("  living-docs check")
     print("  living-docs skills")
@@ -403,6 +452,7 @@ def skills_command(_: argparse.Namespace) -> int:
     print("  living-docs version")
     print("  living-docs self check")
     print(f"  current style: {style}")
+    print("  available integrations: " + ", ".join(sorted(INTEGRATIONS)))
     print()
     print("Docs app:")
     print(f"  cd {docs_root}")
@@ -418,18 +468,24 @@ def skills_command(_: argparse.Namespace) -> int:
     print("  node .living-docs/scripts/glossary.mjs")
     print("  node .living-docs/scripts/check.mjs")
     print()
-    print("Agent skills:")
+    print("Agent integrations:")
     for integration_name in integrations:
         integration = INTEGRATIONS.get(integration_name)
         if not integration:
             continue
-        prefix = "$" if integration.key == "codex" else "/"
         print(f"  {integration.label} ({integration.skills_dir}):")
-        print(f"    {prefix}living-docs-architecture")
-        print(f"    {prefix}living-docs-change")
-        print(f"    {prefix}living-docs-plan")
-        print(f"    {prefix}living-docs-glossary")
-        print(f"    {prefix}living-docs-check")
+        for name in [
+            "living-docs-write",
+            "living-docs-architecture",
+            "living-docs-change",
+            "living-docs-plan",
+            "living-docs-glossary",
+            "living-docs-check",
+        ]:
+            if integration.invocation_prefix:
+                print(f"    {integration.invocation_prefix}{name}")
+            else:
+                print(f"    {integration.skills_dir}/{name}/SKILL.md")
     return 0
 
 

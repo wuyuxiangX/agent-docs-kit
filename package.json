@@ -19,8 +19,10 @@
     "codex",
     "claude-code",
     "copilot",
+    "cursor",
     "documentation",
     "fumadocs",
+    "gemini-cli",
     "mdx",
     "glossary"
   ],
