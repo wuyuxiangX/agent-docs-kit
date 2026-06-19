@@ -4,9 +4,13 @@ import {
   ArchMap,
   ChangeMeta,
   DocsHero,
+  FlowMap,
   FlowSteps,
+  LayerMap,
+  RoadmapMap,
   SkillGrid,
   StateFlow,
+  SystemMap,
   TermGrid,
 } from './living-docs';
 
@@ -16,9 +20,13 @@ export function getMDXComponents(components?: MDXComponents) {
     ArchMap,
     ChangeMeta,
     DocsHero,
+    FlowMap,
     FlowSteps,
+    LayerMap,
+    RoadmapMap,
     SkillGrid,
     StateFlow,
+    SystemMap,
     TermGrid,
     ...components,
   } satisfies MDXComponents;

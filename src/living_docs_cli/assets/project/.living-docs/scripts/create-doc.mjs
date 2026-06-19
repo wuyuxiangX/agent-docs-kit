@@ -52,8 +52,8 @@ function writeNew(path, content) {
 }
 
 const [kind, domainArg, topicArg, ...titleParts] = process.argv.slice(2);
-if (!kind || !['architecture', 'change', 'plan'].includes(kind)) {
-  fail('usage: create-doc.mjs <architecture|change|plan> <domain> [topic-slug] [title]');
+if (!kind || !['atlas', 'architecture', 'change', 'plan'].includes(kind)) {
+  fail('usage: create-doc.mjs <atlas|architecture|change|plan> <domain> [topic-slug] [title]');
 }
 if (!domainArg) {
   fail('domain is required');
@@ -68,7 +68,9 @@ const tests = process.env.LIVING_DOCS_TESTS || 'TODO';
 
 let templateName = `${kind}.mdx`;
 let outPath;
-if (kind === 'architecture') {
+if (kind === 'atlas') {
+  outPath = join(contentDir, 'atlas.mdx');
+} else if (kind === 'architecture') {
   outPath = join(contentDir, domain, 'architecture.mdx');
 } else if (kind === 'change') {
   outPath = join(contentDir, domain, 'changes', `${today}-${topic}.mdx`);

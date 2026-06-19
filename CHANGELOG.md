@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.2.0
+
+- Added Project Atlas as the primary project-level architecture map.
+- Added `living-docs atlas` / `agent-docs-kit atlas` to generate an editable Atlas MDX draft from repository structure.
+- Added Atlas-oriented MDX components: `SystemMap`, `LayerMap`, `FlowMap`, and `RoadmapMap`.
+- Added Atlas starter content, template support, and validation rules for the new map components.
+- Updated architecture workflow guidance to prefer broad project maps over feature-by-feature docs sprawl.
+- Added `living-docs web` / `agent-docs-kit web` to install docs dependencies when needed and start the local Fumadocs site on an available port.
+- Added a generated docs app `postcss` override for the audited safe version used by Next.js.
+
 ## 2.1.0
 
 - Added interactive `living-docs init` prompts for target project, docs directory, agent integrations, style, and overwrite behavior.

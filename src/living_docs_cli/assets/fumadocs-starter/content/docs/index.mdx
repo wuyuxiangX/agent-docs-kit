@@ -6,20 +6,24 @@ type: "guide"
 
 <DocsHero
   title="__PROJECT_NAME__ Documentation"
-  description="A skills-first documentation workspace for architecture, shipped changes, future plans, and shared vocabulary."
-  primaryLabel="Open architecture"
-  primaryHref="/docs/architecture"
+  description="A skills-first project atlas for architecture maps, core flows, shipped changes, future plans, and shared vocabulary."
+  primaryLabel="Open Project Atlas"
+  primaryHref="/docs/atlas"
   secondaryLabel="View glossary"
   secondaryHref="/docs/glossary"
 />
 
-This documentation system is managed by living-docs. Use MDX as the source of truth and Fumadocs as the presentation layer.
+This documentation system is managed by living-docs. Start with the Project
+Atlas when the user needs a broad view of modules, layers, flows, and
+architecture direction. Use MDX as the source of truth and Fumadocs as the
+presentation layer.
 
 Reusable documentation components are available in [Components](/docs/components).
 
 ## Structure
 
 - Architecture pages describe current system shape.
+- The Project Atlas shows the project-level map and should stay broad.
 - Change pages record what changed and why.
 - Plan pages capture future design directions.
 - The glossary is generated from frontmatter `terms`.
@@ -37,7 +41,7 @@ Use these project-local skills from your agent:
     },
     {
       name: 'living-docs-architecture',
-      body: 'Capture the current system shape, contracts, runtime paths, and diagrams.',
+      body: 'Capture the Project Atlas, current system shape, contracts, runtime paths, and diagrams.',
       tone: 'blue',
     },
     {
@@ -66,6 +70,9 @@ Use these project-local skills from your agent:
 The skills use these project-local scripts:
 
 ```bash
+agent-docs-kit web
+agent-docs-kit skills
+agent-docs-kit atlas --force
 node .living-docs/scripts/create-doc.mjs change api auth-flow "Auth Flow Update"
 node .living-docs/scripts/glossary.mjs
 node .living-docs/scripts/check.mjs

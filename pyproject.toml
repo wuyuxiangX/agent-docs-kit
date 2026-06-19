@@ -1,7 +1,7 @@
 [project]
 name = "agent-docs-kit"
-version = "2.1.0"
-description = "Bootstrap and maintain a Fumadocs-powered MDX documentation system with agent skills, reusable templates, and validation."
+version = "2.2.0"
+description = "Bootstrap and maintain a Fumadocs-powered Project Atlas with agent skills, reusable templates, and validation."
 requires-python = ">=3.10"
 dependencies = []
 authors = [

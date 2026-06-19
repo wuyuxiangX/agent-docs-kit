@@ -15,8 +15,8 @@ export function DocsHero({
   title,
   eyebrow = 'Living documentation',
   description,
-  primaryHref = '/docs/architecture',
-  primaryLabel = 'Open architecture',
+  primaryHref = '/docs/atlas',
+  primaryLabel = 'Open Project Atlas',
   secondaryHref = '/docs/glossary',
   secondaryLabel = 'View glossary',
 }: {
@@ -93,6 +93,161 @@ export function ArchMap({ tiers }: { tiers: ArchTier[] }) {
         </section>
       ))}
     </div>
+  );
+}
+
+export type SystemNode = {
+  title: string;
+  body: string;
+  tone?: ArchTone;
+  href?: string;
+};
+
+export type SystemLink = {
+  from: string;
+  to: string;
+  label?: string;
+};
+
+export function SystemMap({
+  title,
+  nodes,
+  links = [],
+}: {
+  title?: string;
+  nodes: SystemNode[];
+  links?: SystemLink[];
+}) {
+  return (
+    <section className="ld-system-map">
+      {title ? <div className="ld-map-title">{title}</div> : null}
+      <div className="ld-system-grid">
+        {nodes.map((node) => {
+          const content = (
+            <>
+              <strong>{node.title}</strong>
+              <span>{node.body}</span>
+            </>
+          );
+          return node.href ? (
+            <a className="ld-system-node" data-tone={node.tone} href={node.href} key={node.title}>
+              {content}
+            </a>
+          ) : (
+            <div className="ld-system-node" data-tone={node.tone} key={node.title}>
+              {content}
+            </div>
+          );
+        })}
+      </div>
+      {links.length ? (
+        <ol className="ld-system-links">
+          {links.map((link) => (
+            <li key={`${link.from}-${link.to}-${link.label ?? ''}`}>
+              <span>{link.from}</span>
+              <strong>{link.label ?? 'connects to'}</strong>
+              <span>{link.to}</span>
+            </li>
+          ))}
+        </ol>
+      ) : null}
+    </section>
+  );
+}
+
+export type LayerItem = {
+  title: string;
+  body: string;
+  tone?: ArchTone;
+  items: string[];
+};
+
+export function LayerMap({
+  title,
+  layers,
+}: {
+  title?: string;
+  layers: LayerItem[];
+}) {
+  return (
+    <section className="ld-layer-map">
+      {title ? <div className="ld-map-title">{title}</div> : null}
+      <div className="ld-layer-stack">
+        {layers.map((layer) => (
+          <section className="ld-layer-row" data-tone={layer.tone} key={layer.title}>
+            <div>
+              <strong>{layer.title}</strong>
+              <span>{layer.body}</span>
+            </div>
+            <ul>
+              {layer.items.map((item) => (
+                <li key={`${layer.title}-${item}`}>
+                  <code>{item}</code>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export type FlowLane = {
+  title: string;
+  body: string;
+  tone?: ArchTone;
+  steps: string[];
+};
+
+export function FlowMap({
+  title,
+  flows,
+}: {
+  title?: string;
+  flows: FlowLane[];
+}) {
+  return (
+    <section className="ld-flow-map">
+      {title ? <div className="ld-map-title">{title}</div> : null}
+      <div className="ld-flow-lanes">
+        {flows.map((flow) => (
+          <section className="ld-flow-lane" data-tone={flow.tone} key={flow.title}>
+            <strong>{flow.title}</strong>
+            <span>{flow.body}</span>
+            <ol>
+              {flow.steps.map((step, index) => (
+                <li key={`${flow.title}-${step}`}>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export type RoadmapItem = {
+  title: string;
+  body: string;
+  status?: string;
+  tone?: ArchTone;
+};
+
+export function RoadmapMap({ items }: { items: RoadmapItem[] }) {
+  return (
+    <section className="ld-roadmap-map">
+      {items.map((item) => (
+        <article className="ld-roadmap-item" data-tone={item.tone} key={item.title}>
+          {item.status ? <span className="ld-roadmap-status">{item.status}</span> : null}
+          <strong>{item.title}</strong>
+          <span>{item.body}</span>
+        </article>
+      ))}
+    </section>
   );
 }
 

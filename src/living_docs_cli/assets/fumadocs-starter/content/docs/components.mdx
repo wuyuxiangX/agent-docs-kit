@@ -10,6 +10,113 @@ Use these MDX components directly in living-docs pages. Prefer components for
 common documentation shapes, and use mermaid only when the diagram needs custom
 graph syntax such as sequence diagrams, complex branches, or ER diagrams.
 
+## Project Atlas Components
+
+Use these components when the page is a broad project map rather than a
+feature-level document.
+
+```mdx
+<SystemMap
+  title="System map"
+  nodes={[
+    { title: 'Web app', body: 'User-facing routes and UI state.', tone: 'blue' },
+    { title: 'API', body: 'Server contracts and orchestration.', tone: 'green' },
+    { title: 'Database', body: 'Persistence and migration boundary.', tone: 'amber' },
+  ]}
+  links={[
+    { from: 'Web app', to: 'API', label: 'calls' },
+    { from: 'API', to: 'Database', label: 'persists' },
+  ]}
+/>
+```
+
+<SystemMap
+  title="System map"
+  nodes={[
+    { title: 'Web app', body: 'User-facing routes and UI state.', tone: 'blue' },
+    { title: 'API', body: 'Server contracts and orchestration.', tone: 'green' },
+    { title: 'Database', body: 'Persistence and migration boundary.', tone: 'amber' },
+  ]}
+  links={[
+    { from: 'Web app', to: 'API', label: 'calls' },
+    { from: 'API', to: 'Database', label: 'persists' },
+  ]}
+/>
+
+```mdx
+<LayerMap
+  title="Project layers"
+  layers={[
+    {
+      title: 'Surfaces',
+      body: 'User-visible or agent-visible entry points.',
+      tone: 'blue',
+      items: ['app/', 'api/', 'cli/'],
+    },
+    {
+      title: 'Domain code',
+      body: 'Core modules and ownership boundaries.',
+      tone: 'green',
+      items: ['src/domain', 'src/services'],
+    },
+  ]}
+/>
+```
+
+<LayerMap
+  title="Project layers"
+  layers={[
+    {
+      title: 'Surfaces',
+      body: 'User-visible or agent-visible entry points.',
+      tone: 'blue',
+      items: ['app/', 'api/', 'cli/'],
+    },
+    {
+      title: 'Domain code',
+      body: 'Core modules and ownership boundaries.',
+      tone: 'green',
+      items: ['src/domain', 'src/services'],
+    },
+  ]}
+/>
+
+```mdx
+<FlowMap
+  title="Primary runtime path"
+  flows={[
+    { title: 'Entry', body: 'Input and routing boundary.', tone: 'blue', steps: ['Request', 'Route'] },
+    { title: 'Execution', body: 'Core modules and state changes.', tone: 'green', steps: ['Validate', 'Persist'] },
+    { title: 'Output', body: 'Response and observation.', tone: 'amber', steps: ['Return', 'Observe'] },
+  ]}
+/>
+```
+
+<FlowMap
+  title="Primary runtime path"
+  flows={[
+    { title: 'Entry', body: 'Input and routing boundary.', tone: 'blue', steps: ['Request', 'Route'] },
+    { title: 'Execution', body: 'Core modules and state changes.', tone: 'green', steps: ['Validate', 'Persist'] },
+    { title: 'Output', body: 'Response and observation.', tone: 'amber', steps: ['Return', 'Observe'] },
+  ]}
+/>
+
+```mdx
+<RoadmapMap
+  items={[
+    { title: 'Current shape', body: 'What the repo and runtime prove today.', status: 'now', tone: 'green' },
+    { title: 'Next structural move', body: 'The next architecture-level change.', status: 'next', tone: 'blue' },
+  ]}
+/>
+```
+
+<RoadmapMap
+  items={[
+    { title: 'Current shape', body: 'What the repo and runtime prove today.', status: 'now', tone: 'green' },
+    { title: 'Next structural move', body: 'The next architecture-level change.', status: 'next', tone: 'blue' },
+  ]}
+/>
+
 ## Architecture Map
 
 Use `<ArchMap />` for layered system structure.

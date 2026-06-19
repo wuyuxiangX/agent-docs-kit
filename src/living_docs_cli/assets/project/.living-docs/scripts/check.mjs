@@ -29,7 +29,16 @@ function scalar(fm, key) {
 }
 
 function hasDiagram(text) {
-  return ['<ArchMap', '<FlowSteps', '<StateFlow', '```mermaid'].some((marker) => text.includes(marker));
+  return [
+    '<ArchMap',
+    '<FlowSteps',
+    '<StateFlow',
+    '<SystemMap',
+    '<LayerMap',
+    '<FlowMap',
+    '<RoadmapMap',
+    '```mermaid',
+  ].some((marker) => text.includes(marker));
 }
 
 if (!existsSync(configPath)) {
@@ -51,7 +60,7 @@ if (!existsSync(configPath)) {
       if (rel.includes('/changes/') && type !== 'change') errors.push(`${rel}: changes pages must set type: change`);
       if (rel.includes('/plans/') && type !== 'plan') errors.push(`${rel}: plan pages must set type: plan`);
       if ((type === 'architecture' || type === 'change') && !hasDiagram(text)) {
-        errors.push(`${rel}: architecture/change docs need <ArchMap />, <FlowSteps />, <StateFlow />, or mermaid`);
+        errors.push(`${rel}: architecture/change docs need an architecture map, flow map, state map, roadmap map, or mermaid`);
       }
       if ((type === 'architecture' || type === 'change' || type === 'plan') && !fm.includes('terms:') && !text.includes('<TermGrid')) {
         errors.push(`${rel}: managed docs should define terms or render <TermGrid />`);

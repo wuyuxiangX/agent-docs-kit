@@ -1,0 +1,80 @@
+---
+title: "__TITLE__"
+description: "Project-level architecture map for __DOMAIN__"
+domain: "__DOMAIN__"
+type: "architecture"
+status: "draft"
+date: "__DATE__"
+terms:
+  - name: "Project Atlas"
+    description: "A project-level map of modules, layers, flows, and architecture direction."
+  - name: "Module boundary"
+    description: "A source, package, service, or ownership boundary visible in the repository."
+---
+
+# __TITLE__
+
+Use this page as the project-level architecture map. Keep it broad: modules,
+layers, core flows, and architecture direction. Put feature-level details in
+domain architecture pages or change records.
+
+<SystemMap
+  title="System map"
+  nodes={[
+    { title: 'Entry surface', body: 'TODO: user, API, CLI, job, or agent entry point.', tone: 'blue' },
+    { title: 'Core module', body: 'TODO: orchestration or domain boundary.', tone: 'green' },
+    { title: 'Data/provider boundary', body: 'TODO: storage, queue, external API, or model boundary.', tone: 'amber' },
+  ]}
+/>
+
+<LayerMap
+  title="Project layers"
+  layers={[
+    {
+      title: 'Surfaces',
+      body: 'User-visible or agent-visible entry points.',
+      tone: 'blue',
+      items: ['TODO: web/app/api/cli'],
+    },
+    {
+      title: 'Domain code',
+      body: 'Core modules and ownership boundaries.',
+      tone: 'green',
+      items: ['TODO: src/module'],
+    },
+    {
+      title: 'Delivery and knowledge',
+      body: 'Docs, automation, deployment, and operations.',
+      tone: 'violet',
+      items: ['TODO: docs/.github/.living-docs'],
+    },
+  ]}
+/>
+
+## Core Flow
+
+<FlowMap
+  title="Primary runtime path"
+  flows={[
+    { title: 'Entry', body: 'TODO: input and routing boundary.', tone: 'blue', steps: ['Input', 'Route'] },
+    { title: 'Execution', body: 'TODO: core modules and state changes.', tone: 'green', steps: ['Process', 'Persist or call provider'] },
+    { title: 'Output', body: 'TODO: response, event, or rendered state.', tone: 'amber', steps: ['Return', 'Observe'] },
+  ]}
+/>
+
+## Architecture Direction
+
+<RoadmapMap
+  items={[
+    { title: 'Current shape', body: 'Document what the repo and runtime prove today.', status: 'now', tone: 'green' },
+    { title: 'Next structural change', body: 'TODO: next project-level architecture move.', status: 'next', tone: 'blue' },
+    { title: 'Known risk', body: 'TODO: coupling, unclear ownership, or missing runtime evidence.', status: 'watch', tone: 'amber' },
+  ]}
+/>
+
+<TermGrid
+  items={[
+    { name: 'Project Atlas', description: 'A project-level map of modules, layers, flows, and architecture direction.' },
+    { name: 'Module boundary', description: 'A source, package, service, or ownership boundary visible in the repository.' },
+  ]}
+/>

@@ -1,0 +1,99 @@
+---
+title: "Project Atlas"
+description: "Project-level architecture map."
+domain: "system"
+type: "architecture"
+status: "draft"
+date: "__TODAY__"
+terms:
+  - name: "Project Atlas"
+    description: "A project-level map of modules, layers, flows, and architecture direction."
+  - name: "Module boundary"
+    description: "A source, package, service, or ownership boundary visible in the repository."
+---
+
+# Project Atlas
+
+Use this page as the first architecture surface for `__PROJECT_NAME__`. Keep it
+broad enough for onboarding, refactoring, and handoff. Add feature-level detail
+only when it changes the project-level shape.
+
+<SystemMap
+  title="System map"
+  nodes={[
+    { title: 'Documentation source', body: 'MDX pages and frontmatter hold the editable source of truth.', tone: 'blue' },
+    { title: 'Project skills', body: 'Agent workflows maintain architecture, changes, plans, glossary, and checks.', tone: 'green' },
+    { title: 'Fumadocs app', body: 'The generated docs app renders maps, flows, glossary, and guides.', tone: 'violet' },
+  ]}
+  links={[
+    { from: 'Project skills', to: 'Documentation source', label: 'edit' },
+    { from: 'Documentation source', to: 'Fumadocs app', label: 'render' },
+  ]}
+/>
+
+<LayerMap
+  title="Project layers"
+  layers={[
+    {
+      title: 'Authoring',
+      body: 'Where humans and agents edit project knowledge.',
+      tone: 'blue',
+      items: ['.living-docs/config.json', '.living-docs/templates', 'agent skill folders'],
+    },
+    {
+      title: 'Content',
+      body: 'MDX pages that describe current architecture and selected history.',
+      tone: 'green',
+      items: ['docs/content/docs/atlas.mdx', 'docs/content/docs/architecture.mdx', 'docs/content/docs/glossary.mdx'],
+    },
+    {
+      title: 'Presentation',
+      body: 'Generated Fumadocs app and reusable architecture components.',
+      tone: 'violet',
+      items: ['docs/app', 'docs/components/living-docs', 'docs/source.config.ts'],
+    },
+  ]}
+/>
+
+## Core Flow
+
+<FlowMap
+  title="Documentation loop"
+  flows={[
+    {
+      title: 'Discover',
+      body: 'Inspect source files, config, docs, and runtime evidence before writing.',
+      tone: 'blue',
+      steps: ['Read repo signals', 'Identify project-level boundaries'],
+    },
+    {
+      title: 'Map',
+      body: 'Update the Project Atlas first when the change affects the overall shape.',
+      tone: 'green',
+      steps: ['Update modules', 'Update flows'],
+    },
+    {
+      title: 'Validate',
+      body: 'Regenerate vocabulary and run docs checks before treating the map as current.',
+      tone: 'amber',
+      steps: ['Glossary', 'Check'],
+    },
+  ]}
+/>
+
+## Architecture Direction
+
+<RoadmapMap
+  items={[
+    { title: 'Atlas first', body: 'Start with a project-level map before writing domain details.', status: 'now', tone: 'green' },
+    { title: 'Runtime-backed docs', body: 'Keep current architecture tied to source files, tests, logs, or live surfaces.', status: 'next', tone: 'blue' },
+    { title: 'Avoid docs sprawl', body: 'Do not create a page for every feature unless it clarifies the system shape.', status: 'watch', tone: 'amber' },
+  ]}
+/>
+
+<TermGrid
+  items={[
+    { name: 'Project Atlas', description: 'A project-level map of modules, layers, flows, and architecture direction.' },
+    { name: 'Module boundary', description: 'A source, package, service, or ownership boundary visible in the repository.' },
+  ]}
+/>

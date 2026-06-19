@@ -1,6 +1,6 @@
 ---
 name: living-docs-write
-description: General entrypoint for creating or updating living-docs MDX documentation in a project initialized with living-docs. Use whenever the user asks to write docs, update docs, explain current architecture, record a shipped change, draft a future plan, refresh glossary terms, validate docs health, or maintain the generated Fumadocs documentation system.
+description: General entrypoint for creating or updating living-docs MDX documentation in a project initialized with living-docs. Use whenever the user asks to write docs, update docs, create a Project Atlas, explain current architecture, map a repo, record a shipped change, draft a future plan, refresh glossary terms, validate docs health, or maintain the generated Fumadocs documentation system.
 ---
 
 # living-docs-write
@@ -14,13 +14,14 @@ This is the portable entrypoint for agents that do not have native slash or skil
 1. Read `.living-docs/config.json`.
 2. Inspect existing docs under the configured `contentDir`.
 3. Choose the specific workflow:
-   - Architecture/current system shape: use `living-docs-architecture`.
+   - Project overview, repo map, onboarding map, architecture/current system shape: use `living-docs-architecture`.
    - Shipped behavior or implementation change: use `living-docs-change`.
    - Future direction or blueprint: use `living-docs-plan`.
    - Terms changed: use `living-docs-glossary`.
    - Validation only: use `living-docs-check`.
 4. Keep MDX as the source of truth. Do not edit generated HTML output.
 5. Prefer built-in MDX components for common diagrams:
+   - `<SystemMap />`, `<LayerMap />`, `<FlowMap />`, and `<RoadmapMap />` for Project Atlas pages.
    - `<ArchMap />` for architecture layers.
    - `<FlowSteps />` for runtime or behavior flows.
    - `<StateFlow />` for state transitions.
@@ -30,6 +31,7 @@ This is the portable entrypoint for agents that do not have native slash or skil
 ## Write Safety
 
 - Do not invent architecture or verification details. Inspect source files, diffs, tests, logs, or the runtime surface first.
+- Do not create a page for every feature by default. For broad project understanding, update the Project Atlas before adding narrower pages.
 - Do not overwrite an existing MDX page unless the user asked to update that page or the selected workflow clearly targets it.
 - Keep historical facts in change records, current facts in architecture pages, and future intent in plan pages.
 - If the request mixes shipped facts and future intent, create or update separate change and plan pages instead of blending them.

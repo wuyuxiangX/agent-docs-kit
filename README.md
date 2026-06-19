@@ -1,8 +1,14 @@
 # agent-docs-kit
 
-Generic documentation system for agent-assisted projects.
+Project Atlas documentation system for agent-assisted projects.
 
-agent-docs-kit bootstraps a Fumadocs + MDX documentation app, project-local scaffolding scripts, reusable MDX templates, and agent skills for Codex, Claude Code, Copilot, Cursor, Gemini CLI, or a generic agent directory.
+agent-docs-kit bootstraps a Fumadocs + MDX Project Atlas, project-local
+scaffolding scripts, reusable MDX templates, and agent skills for Codex, Claude
+Code, Copilot, Cursor, Gemini CLI, or a generic agent directory.
+
+The main goal is a broad architecture map: modules, layers, core flows, and
+architecture direction. It is not a project-management platform and does not
+ask you to document every feature.
 
 agent-docs-kit is skills-first. It installs `SKILL.md` workflow skills into the
 target project instead of installing slash-command prompt files.
@@ -25,6 +31,7 @@ One-time usage:
 
 ```bash
 uvx agent-docs-kit init
+uvx agent-docs-kit web --open
 ```
 
 Persistent install:
@@ -63,6 +70,9 @@ agent-docs-kit init . --integration codex
 agent-docs-kit init . --integration codex --integration claude --integration copilot
 agent-docs-kit init . --integration codex --integration cursor --integration gemini
 agent-docs-kit init . --integration codex --docs-dir docs --style atlas --yes
+agent-docs-kit web
+agent-docs-kit atlas --force
+agent-docs-kit skills
 ```
 
 The starter uses the `atlas` style by default:
@@ -121,6 +131,7 @@ separate global `living-docs` helper skill.
 .living-docs/
   config.json
   templates/
+    atlas.mdx
     architecture.mdx
     change.mdx
     plan.mdx
@@ -134,6 +145,7 @@ docs/
   app/
   components/
   content/docs/
+    atlas.mdx
   lib/
   package.json
   source.config.ts
@@ -159,10 +171,20 @@ Re-running init replaces only that block and preserves surrounding project instr
 
 ## Day-to-Day Workflow
 
+Start the local docs site from the project root:
+
+```bash
+agent-docs-kit web
+```
+
+The command installs docs dependencies when `node_modules` is missing, finds an
+available local port starting at `3333`, and prints the URL. Add `--open` to
+open the browser automatically.
+
 Use generated skills from your agent:
 
 - `living-docs-write` for routing a general docs request to the right workflow
-- `living-docs-architecture` for current architecture docs
+- `living-docs-architecture` for Project Atlas and current architecture docs
 - `living-docs-change` for shipped change records
 - `living-docs-plan` for future design plans
 - `living-docs-glossary` after terms change
@@ -171,10 +193,18 @@ Use generated skills from your agent:
 The skills call project-local scripts:
 
 ```bash
+agent-docs-kit skills
+agent-docs-kit web
+agent-docs-kit atlas --force
 node .living-docs/scripts/create-doc.mjs change api auth-flow "Auth Flow Update"
 node .living-docs/scripts/glossary.mjs
 node .living-docs/scripts/check.mjs
 ```
+
+Use `agent-docs-kit atlas --stdout` after init to preview an editable Project
+Atlas draft from repository structure. It writes `docs/content/docs/atlas.mdx`
+by default. New projects already include a starter `atlas.mdx`, so pass
+`--force` only when you want to replace that starter page.
 
 ## MDX Components
 
@@ -182,6 +212,42 @@ living-docs ships reusable MDX components in the generated Fumadocs app. Use
 them directly in `.mdx` pages:
 
 ```mdx
+<SystemMap
+  title="System map"
+  nodes={[
+    { title: 'Web app', body: 'User-facing routes.', tone: 'blue' },
+    { title: 'API', body: 'Server boundary.', tone: 'green' },
+  ]}
+  links={[{ from: 'Web app', to: 'API', label: 'calls' }]}
+/>
+
+<LayerMap
+  title="Project layers"
+  layers={[
+    {
+      title: 'Surfaces',
+      body: 'User-visible or agent-visible entry points.',
+      tone: 'blue',
+      items: ['app/', 'api/', 'cli/'],
+    },
+  ]}
+/>
+
+<FlowMap
+  title="Primary runtime path"
+  flows={[
+    { title: 'Entry', body: 'Input and routing boundary.', tone: 'blue', steps: ['Request', 'Route'] },
+    { title: 'Execution', body: 'Core modules and state changes.', tone: 'green', steps: ['Validate', 'Persist'] },
+  ]}
+/>
+
+<RoadmapMap
+  items={[
+    { title: 'Current shape', body: 'What the repo and runtime prove today.', status: 'now', tone: 'green' },
+    { title: 'Next structural move', body: 'The next architecture-level change.', status: 'next', tone: 'blue' },
+  ]}
+/>
+
 <ArchMap
   tiers={[
     {
@@ -225,12 +291,11 @@ agent-docs-kit check
 ## Run the Docs Site
 
 ```bash
-cd docs
-npm install
-npm run dev -- --port 3333
+agent-docs-kit web
 ```
 
-Fumadocs reads MDX from `docs/content/docs`.
+Fumadocs reads MDX from `docs/content/docs`. If you prefer to run the generated
+app directly, use `cd docs && npm install && npm run dev -- --port 3333`.
 
 ## Publish to PyPI
 
@@ -250,8 +315,8 @@ One-time PyPI setup for a new package:
 After that, publish a release by tagging the commit:
 
 ```bash
-git tag -a v2.1.0 -m v2.1.0
-git push origin v2.1.0
+git tag -a v2.2.0 -m v2.2.0
+git push origin v2.2.0
 ```
 
 The workflow builds the Python package with `uv build` and uploads the
@@ -260,11 +325,13 @@ distribution files to PyPI.
 ## Authoring Contract
 
 - MDX is the source of truth.
+- The Project Atlas is the first project-level architecture surface.
 - Architecture pages describe current state.
 - Change pages are immutable records of shipped changes.
 - Plan pages describe future intent.
 - Glossary pages are generated from frontmatter `terms`.
-- Architecture and change pages should include `<ArchMap />` or mermaid diagrams.
+- Architecture and change pages should include an Atlas/architecture component or mermaid diagram.
+- Do not create feature-level pages by default; prefer a broad Atlas first.
 - Validation must pass before treating docs work as complete.
 
 ## CLI
@@ -273,6 +340,8 @@ distribution files to PyPI.
 agent-docs-kit init
 agent-docs-kit init [target] [--integration codex|claude|copilot|cursor|gemini|generic] [--docs-dir docs] [--force] [--yes]
 agent-docs-kit init . --style atlas --interactive
+agent-docs-kit web [target] [--port 3333] [--host 127.0.0.1] [--open] [--no-install]
+agent-docs-kit atlas [target] [--output docs/content/docs/atlas.mdx] [--force] [--stdout]
 agent-docs-kit check
 agent-docs-kit skills
 agent-docs-kit styles
