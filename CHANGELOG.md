@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.1
+
+- Replaced the integration prompt with a terminal multi-select UI: Up/Down or `j`/`k` moves, Space toggles, `a` selects all, and Enter confirms.
+- Improved the text fallback parser for compact numeric selections such as `12`, spaced selections such as `1 2`, and normalized terminal input.
+- Updated init next steps and generated agent context to prefer `uvx agent-docs-kit ...` commands so one-time `uvx` users do not hit `living-docs: command not found`.
+
 ## 2.2.0
 
 - Added Project Atlas as the primary project-level architecture map.

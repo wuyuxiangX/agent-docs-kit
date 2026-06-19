@@ -51,14 +51,13 @@ by PyPI's project-name similarity checks. It still installs both CLI commands:
 ? Target project [.]:
 ? Docs directory [docs]:
 ? Agent integrations
-  1. codex - Codex (default)
-  2. claude - Claude Code
-  3. copilot - GitHub Copilot
-  4. cursor - Cursor
-  5. gemini - Gemini CLI
-  6. generic - Generic
-  Enter names or numbers separated by commas, or 'all'.
-  Selection [codex]:
+  Up/Down or j/k moves. Space selects. a selects all. Enter confirms.
+  > [x] Codex (codex)
+    [ ] Claude Code (claude)
+    [ ] GitHub Copilot (copilot)
+    [ ] Cursor (cursor)
+    [ ] Gemini CLI (gemini)
+    [ ] Generic (generic)
 ? Style [atlas]:
 ? Overwrite existing managed files if needed? [y/N]:
 ```
@@ -315,8 +314,8 @@ One-time PyPI setup for a new package:
 After that, publish a release by tagging the commit:
 
 ```bash
-git tag -a v2.2.0 -m v2.2.0
-git push origin v2.2.0
+git tag -a v2.2.1 -m v2.2.1
+git push origin v2.2.1
 ```
 
 The workflow builds the Python package with `uv build` and uploads the

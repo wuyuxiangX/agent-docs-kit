@@ -8,12 +8,13 @@ import shutil
 import socket
 import subprocess
 import sys
+import unicodedata
 import webbrowser
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
-VERSION = "2.2.0"
+VERSION = "2.2.1"
 PACKAGE_DIR = Path(__file__).resolve().parent
 ASSETS_DIR = PACKAGE_DIR / "assets"
 STYLE_NAMES = ("atlas",)
@@ -235,12 +236,38 @@ def write_json(path: Path, payload: dict, *, force: bool) -> None:
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
 
 
+def expand_integration_token(token: str) -> list[str]:
+    if token.isdigit() and len(token) > 1:
+        keys: list[str] = []
+        for char in token:
+            index = int(char) - 1
+            if index < 0 or index >= len(INTEGRATION_ORDER):
+                return [token]
+            keys.append(INTEGRATION_ORDER[index])
+        return keys
+    return [token]
+
+
+def normalize_integration_tokens(raw: str) -> list[str]:
+    normalized = unicodedata.normalize("NFKC", raw)
+    normalized = normalized.replace("\ufffd", "")
+    tokens = [
+        token.strip().lower()
+        for token in re.split(r"[\s,，、]+", normalized)
+        if token.strip()
+    ]
+    expanded: list[str] = []
+    for token in tokens:
+        expanded.extend(expand_integration_token(token))
+    return expanded
+
+
 def parse_integration_selection(raw: str, *, default: list[str]) -> list[str]:
     if not raw.strip():
         return default
 
     selected: list[str] = []
-    tokens = [token for token in re.split(r"[\s,]+", raw.strip().lower()) if token]
+    tokens = normalize_integration_tokens(raw)
     if any(token in {"all", "*"} for token in tokens):
         return list(INTEGRATION_ORDER)
 
@@ -259,6 +286,104 @@ def parse_integration_selection(raw: str, *, default: list[str]) -> list[str]:
             selected.append(key)
 
     return selected
+
+
+def read_selection_key() -> str:
+    char = sys.stdin.read(1)
+    if char == "\x1b":
+        seq = sys.stdin.read(2)
+        if seq == "[A":
+            return "up"
+        if seq == "[B":
+            return "down"
+        return "escape"
+    if char in {"\r", "\n"}:
+        return "enter"
+    if char == " ":
+        return "space"
+    lowered = char.lower()
+    if lowered in {"j", "n"}:
+        return "down"
+    if lowered in {"k", "p"}:
+        return "up"
+    if lowered == "a":
+        return "all"
+    if lowered == "q":
+        return "quit"
+    return lowered
+
+
+def prompt_integrations_selector(default: list[str]) -> list[str] | None:
+    if not (sys.stdin.isatty() and sys.stdout.isatty()):
+        return None
+
+    try:
+        import termios
+        import tty
+    except ImportError:
+        return None
+
+    selected = set(default)
+    cursor = 0
+    rendered_lines = 0
+
+    def render(message: str = "") -> None:
+        nonlocal rendered_lines
+        lines = [
+            "? Agent integrations",
+            "  Up/Down or j/k moves. Space selects. a selects all. Enter confirms.",
+        ]
+        for index, key in enumerate(INTEGRATION_ORDER):
+            integration = INTEGRATIONS[key]
+            pointer = ">" if index == cursor else " "
+            mark = "x" if key in selected else " "
+            lines.append(f"  {pointer} [{mark}] {integration.label} ({key})")
+        lines.append(f"  {message}" if message else "  ")
+
+        if rendered_lines:
+            sys.stdout.write(f"\x1b[{rendered_lines}A")
+        for line in lines:
+            sys.stdout.write("\x1b[2K" + line + "\n")
+        rendered_lines = len(lines)
+        sys.stdout.flush()
+
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    sys.stdout.write("\x1b[?25l")
+    try:
+        tty.setcbreak(fd)
+        render()
+        while True:
+            key = read_selection_key()
+            if key == "up":
+                cursor = (cursor - 1) % len(INTEGRATION_ORDER)
+            elif key == "down":
+                cursor = (cursor + 1) % len(INTEGRATION_ORDER)
+            elif key == "space":
+                integration_key = INTEGRATION_ORDER[cursor]
+                if integration_key in selected:
+                    selected.remove(integration_key)
+                else:
+                    selected.add(integration_key)
+            elif key == "all":
+                if len(selected) == len(INTEGRATION_ORDER):
+                    selected = set()
+                else:
+                    selected = set(INTEGRATION_ORDER)
+            elif key == "enter":
+                if selected:
+                    result = [key for key in INTEGRATION_ORDER if key in selected]
+                    render(f"Selected: {', '.join(result)}")
+                    return result
+                render("Select at least one integration.")
+                continue
+            elif key in {"escape", "quit"}:
+                return default
+            render()
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        sys.stdout.write("\x1b[?25h")
+        sys.stdout.flush()
 
 
 def prompt_text(label: str, default: str) -> str:
@@ -281,12 +406,16 @@ def prompt_bool(label: str, default: bool = False) -> bool:
 
 
 def prompt_integrations(default: list[str]) -> list[str]:
+    selected = prompt_integrations_selector(default)
+    if selected:
+        return selected
+
     print("? Agent integrations")
     for index, key in enumerate(INTEGRATION_ORDER, start=1):
         integration = INTEGRATIONS[key]
         marker = " (default)" if key in default else ""
         print(f"  {index}. {key} - {integration.label}{marker}")
-    print("  Enter names or numbers separated by commas, or 'all'.")
+    print("  Select one or more integrations, or press Enter for the default.")
 
     while True:
         raw = input(f"  Selection [{', '.join(default)}]: ")
@@ -362,9 +491,10 @@ Use living-docs skills when the user asks to create or update project documentat
 {skill_lines(integration)}
 
 Keep MDX as the source of truth. Do not hand-edit generated HTML output.
-Run `node .living-docs/scripts/check.mjs` or `living-docs check` before treating docs work as complete.
-Use `living-docs atlas --force` to replace the starter Project Atlas with a repository-structure draft.
-Use `living-docs skills` to list available workflows and `living-docs web` to preview the docs site locally.
+Run `node .living-docs/scripts/check.mjs` or `uvx agent-docs-kit check` before treating docs work as complete.
+Use `uvx agent-docs-kit atlas --force` to replace the starter Project Atlas with a repository-structure draft.
+Use `uvx agent-docs-kit skills` to list available workflows and `uvx agent-docs-kit web --open` to preview the docs site locally.
+If `agent-docs-kit` was installed with `uv tool install agent-docs-kit`, the shorter `agent-docs-kit ...` commands are also available.
 {CONTEXT_END}
 """
 
@@ -494,12 +624,17 @@ def init_project(args: argparse.Namespace) -> int:
     print()
     print("Next steps:")
     print(f"  1. cd {target}")
-    print("  2. living-docs web")
-    print("  3. living-docs atlas --force")
-    print("  4. living-docs skills")
+    print("  2. uvx agent-docs-kit web --open")
+    print("  3. uvx agent-docs-kit atlas --force")
+    print("  4. uvx agent-docs-kit skills")
+    print()
+    print("If you installed persistently with `uv tool install agent-docs-kit`, you can use:")
+    print("  agent-docs-kit web --open")
+    print("  agent-docs-kit atlas --force")
+    print("  agent-docs-kit skills")
     for integration_name in integrations:
         print(f"  - {INTEGRATIONS[integration_name].next_step}")
-    print("  - Run `living-docs check` or `node .living-docs/scripts/check.mjs` before committing docs changes.")
+    print("  - Run `uvx agent-docs-kit check` or `node .living-docs/scripts/check.mjs` before committing docs changes.")
     return 0
 
 
@@ -1005,23 +1140,24 @@ def skills_command(_: argparse.Namespace) -> int:
     print("living-docs skills")
     print()
     print("CLI:")
-    print("  living-docs init")
-    print("  living-docs init [target] --integration codex --integration claude")
-    print("  living-docs init . --integration codex --integration cursor --integration gemini")
-    print("  living-docs init . --docs-dir docs --style atlas --yes")
-    print("  living-docs init . --style atlas --interactive")
-    print("  living-docs web")
-    print("  living-docs atlas --force")
-    print("  living-docs check")
-    print("  living-docs skills")
-    print("  living-docs styles")
-    print("  living-docs version")
-    print("  living-docs self check")
+    print("  uvx agent-docs-kit init")
+    print("  uvx agent-docs-kit init [target] --integration codex --integration claude")
+    print("  uvx agent-docs-kit init . --integration codex --integration cursor --integration gemini")
+    print("  uvx agent-docs-kit init . --docs-dir docs --style atlas --yes")
+    print("  uvx agent-docs-kit init . --style atlas --interactive")
+    print("  uvx agent-docs-kit web --open")
+    print("  uvx agent-docs-kit atlas --force")
+    print("  uvx agent-docs-kit check")
+    print("  uvx agent-docs-kit skills")
+    print("  uvx agent-docs-kit styles")
+    print("  uvx agent-docs-kit version")
+    print("  uvx agent-docs-kit self check")
+    print("  persistent install alias: agent-docs-kit ... or living-docs ...")
     print(f"  current style: {style}")
     print("  available integrations: " + ", ".join(sorted(INTEGRATIONS)))
     print()
     print("Docs app:")
-    print("  living-docs web")
+    print("  uvx agent-docs-kit web --open")
     print(f"  cd {docs_root}")
     print("  npm run typecheck")
     print("  npm run build")
