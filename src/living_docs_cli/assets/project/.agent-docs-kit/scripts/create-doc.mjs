@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = process.cwd();
-const configPath = join(root, '.living-docs', 'config.json');
+const configPath = join(root, '.agent-docs-kit', 'config.json');
 
 function fail(message) {
   console.error(`Error: ${message}`);
@@ -12,12 +12,12 @@ function fail(message) {
 }
 
 if (!existsSync(configPath)) {
-  fail('missing .living-docs/config.json; run living-docs init first');
+  fail('missing .agent-docs-kit/config.json; run agent-docs-kit init first');
 }
 
 const config = JSON.parse(readFileSync(configPath, 'utf8'));
 const contentDir = join(root, config.contentDir || 'docs/content/docs');
-const templatesDir = join(root, '.living-docs', 'templates');
+const templatesDir = join(root, '.agent-docs-kit', 'templates');
 
 function slugify(input) {
   return input
@@ -63,8 +63,8 @@ const domain = slugify(domainArg);
 const today = new Date().toISOString().slice(0, 10);
 const topic = topicArg ? slugify(topicArg) : domain;
 const title = titleParts.length ? titleParts.join(' ') : titleize(topic);
-const source = process.env.LIVING_DOCS_SOURCE || 'TODO';
-const tests = process.env.LIVING_DOCS_TESTS || 'TODO';
+const source = process.env.AGENT_DOCS_KIT_SOURCE || 'TODO';
+const tests = process.env.AGENT_DOCS_KIT_TESTS || 'TODO';
 
 let templateName = `${kind}.mdx`;
 let outPath;

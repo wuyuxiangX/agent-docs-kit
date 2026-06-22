@@ -41,9 +41,7 @@ uv tool install agent-docs-kit
 agent-docs-kit init
 ```
 
-The PyPI distribution is named `agent-docs-kit` because `living-docs` is blocked
-by PyPI's project-name similarity checks. It still installs both CLI commands:
-`agent-docs-kit` and `living-docs`.
+The PyPI distribution installs one public CLI command: `agent-docs-kit`.
 
 `agent-docs-kit init` is interactive in a terminal:
 
@@ -83,51 +81,50 @@ agent-docs-kit styles
 
 ## Supported Agent Platforms
 
-living-docs installs the same workflow skills into the best available
+agent-docs-kit installs the same workflow skills into the best available
 instruction surface for each agent. Native skill platforms get direct skill
 folders; other agents get portable `SKILL.md` workflow files plus a project
 context file that points to them.
 
 | Integration | Context file | Workflow files |
 | --- | --- | --- |
-| `codex` | `AGENTS.md` | `.agents/skills/living-docs-*` |
-| `claude` | `CLAUDE.md` | `.claude/skills/living-docs-*` |
-| `copilot` | `.github/copilot-instructions.md` | `.github/skills/living-docs-*` |
-| `cursor` | `.cursor/rules/living-docs.mdc` | `.living-docs/skills/living-docs-*` |
-| `gemini` | `GEMINI.md` | `.living-docs/skills/living-docs-*` |
-| `generic` | `.living-docs/AGENT_CONTEXT.md` | `.living-docs/skills/living-docs-*` |
+| `codex` | `AGENTS.md` | `.agents/skills/agent-docs-kit-*` |
+| `claude` | `CLAUDE.md` | `.claude/skills/agent-docs-kit-*` |
+| `copilot` | `.github/copilot-instructions.md` | `.github/skills/agent-docs-kit-*` |
+| `cursor` | `.cursor/rules/agent-docs-kit.mdc` | `.agent-docs-kit/skills/agent-docs-kit-*` |
+| `gemini` | `GEMINI.md` | `.agent-docs-kit/skills/agent-docs-kit-*` |
+| `generic` | `.agent-docs-kit/AGENT_CONTEXT.md` | `.agent-docs-kit/skills/agent-docs-kit-*` |
 
 You can repeat `--integration` to install several surfaces in one project.
-`cursor`, `gemini`, and `generic` share `.living-docs/skills`, so a project can
+`cursor`, `gemini`, and `generic` share `.agent-docs-kit/skills`, so a project can
 support multiple agents without duplicating the portable workflow files.
 
 ## User Paths
 
-There is one bootstrap path: install the CLI, then run `agent-docs-kit init` or
-`living-docs init` in the target project. The project-local skills are generated
-during init.
+There is one bootstrap path: install the CLI, then run `agent-docs-kit init` in
+the target project. The project-local skills are generated during init.
 
 ```text
-<project>/.living-docs/
+<project>/.agent-docs-kit/
 <project>/docs/
-<project>/.agents/skills/living-docs-*   # Codex integration
-<project>/.claude/skills/living-docs-*    # Claude integration
-<project>/.github/skills/living-docs-*    # Copilot integration
-<project>/.cursor/rules/living-docs.mdc   # Cursor integration
+<project>/.agents/skills/agent-docs-kit-*   # Codex integration
+<project>/.claude/skills/agent-docs-kit-*    # Claude integration
+<project>/.github/skills/agent-docs-kit-*    # Copilot integration
+<project>/.cursor/rules/agent-docs-kit.mdc   # Cursor integration
 <project>/GEMINI.md                       # Gemini CLI integration
-<project>/.living-docs/skills/living-docs-* # Portable workflows
+<project>/.agent-docs-kit/skills/agent-docs-kit-* # Portable workflows
 ```
 
 The per-project workflow skills live in the CLI assets under
 `src/living_docs_cli/assets/workflow-skills/` and are copied into each target
 project during `init`, so they can use that project's
-`.living-docs/config.json`, templates, scripts, and context file. There is no
-separate global `living-docs` helper skill.
+`.agent-docs-kit/config.json`, templates, scripts, and context file. There is no
+separate global `agent-docs-kit` helper skill.
 
 ## What Init Creates
 
 ```text
-.living-docs/
+.agent-docs-kit/
   config.json
   templates/
     atlas.mdx
@@ -152,18 +149,18 @@ docs/
 .agents/skills/                 # codex integration
 .claude/skills/                 # claude integration
 .github/skills/                 # copilot skills mode
-.cursor/rules/living-docs.mdc   # cursor integration
+.cursor/rules/agent-docs-kit.mdc   # cursor integration
 GEMINI.md                       # gemini integration
-.living-docs/skills/            # portable workflow skills
-AGENTS.md / CLAUDE.md / ...     # managed living-docs context block
+.agent-docs-kit/skills/            # portable workflow skills
+AGENTS.md / CLAUDE.md / ...     # managed agent-docs-kit context block
 ```
 
 The managed context block is bounded by:
 
 ```markdown
-<!-- LIVING-DOCS START -->
+<!-- AGENT-DOCS-KIT START -->
 ...
-<!-- LIVING-DOCS END -->
+<!-- AGENT-DOCS-KIT END -->
 ```
 
 Re-running init replaces only that block and preserves surrounding project instructions.
@@ -182,23 +179,26 @@ open the browser automatically.
 
 Use generated skills from your agent:
 
-- `living-docs-write` for routing a general docs request to the right workflow
-- `living-docs-architecture` for Project Atlas and current architecture docs
-- `living-docs-change` for shipped change records
-- `living-docs-plan` for future design plans
-- `living-docs-glossary` after terms change
-- `living-docs-check` before committing docs changes
+- `agent-docs-kit-write` for routing a general docs request to the right workflow
+- `agent-docs-kit-architecture` for Project Atlas and current architecture docs
+- `agent-docs-kit-change` for shipped change records
+- `agent-docs-kit-plan` for future design plans
+- `agent-docs-kit-glossary` after terms change
+- `agent-docs-kit-check` before committing docs changes
 
-The skills call project-local scripts:
+Common commands:
 
 ```bash
 agent-docs-kit skills
-agent-docs-kit web
+agent-docs-kit web --open
 agent-docs-kit atlas --force
-node .living-docs/scripts/create-doc.mjs change api auth-flow "Auth Flow Update"
-node .living-docs/scripts/glossary.mjs
-node .living-docs/scripts/check.mjs
+agent-docs-kit create-doc change api auth-flow "Auth Flow Update"
+agent-docs-kit glossary
+agent-docs-kit check
 ```
+
+The generated `.agent-docs-kit/scripts/` files are implementation details used
+by the project-local skills.
 
 Use `agent-docs-kit atlas --stdout` after init to preview an editable Project
 Atlas draft from repository structure. It writes `docs/content/docs/atlas.mdx`
@@ -207,7 +207,7 @@ by default. New projects already include a starter `atlas.mdx`, so pass
 
 ## MDX Components
 
-living-docs ships reusable MDX components in the generated Fumadocs app. Use
+agent-docs-kit ships reusable MDX components in the generated Fumadocs app. Use
 them directly in `.mdx` pages:
 
 ```mdx
@@ -314,8 +314,8 @@ One-time PyPI setup for a new package:
 After that, publish a release by tagging the commit:
 
 ```bash
-git tag -a v2.2.1 -m v2.2.1
-git push origin v2.2.1
+git tag -a v2.2.2 -m v2.2.2
+git push origin v2.2.2
 ```
 
 The workflow builds the Python package with `uv build` and uploads the
@@ -341,6 +341,8 @@ agent-docs-kit init [target] [--integration codex|claude|copilot|cursor|gemini|g
 agent-docs-kit init . --style atlas --interactive
 agent-docs-kit web [target] [--port 3333] [--host 127.0.0.1] [--open] [--no-install]
 agent-docs-kit atlas [target] [--output docs/content/docs/atlas.mdx] [--force] [--stdout]
+agent-docs-kit create-doc <atlas|architecture|change|plan> <domain> [slug] ["Title"]
+agent-docs-kit glossary
 agent-docs-kit check
 agent-docs-kit skills
 agent-docs-kit styles

@@ -1,22 +1,22 @@
 ---
-name: living-docs-glossary
-description: Regenerate and review the glossary in a living-docs Fumadocs project. Use whenever MDX frontmatter terms were added, changed, duplicated, renamed, or need consistency cleanup before docs are committed.
+name: agent-docs-kit-glossary
+description: Regenerate and review the glossary in an agent-docs-kit Fumadocs project. Use whenever MDX frontmatter terms were added, changed, duplicated, renamed, or need consistency cleanup before docs are committed.
 ---
 
-# living-docs-glossary
+# agent-docs-kit-glossary
 
-Use this skill only inside a project that has `.living-docs/config.json`. If that file is missing, tell the user to run `living-docs init` first.
+Use this skill only inside a project that has `.agent-docs-kit/config.json`. If that file is missing, tell the user to run `agent-docs-kit init` first.
 
 ## Workflow
 
-1. Read `.living-docs/config.json`.
+1. Read `.agent-docs-kit/config.json`.
 2. Inspect frontmatter `terms` in the relevant MDX files.
 3. Normalize duplicate terms only when they clearly mean the same project concept.
 4. Run:
 
 ```bash
-node .living-docs/scripts/glossary.mjs
-node .living-docs/scripts/check.mjs
+uvx agent-docs-kit glossary
+uvx agent-docs-kit check
 ```
 
 5. If the generated glossary looks wrong, fix source page frontmatter rather than hand-editing `glossary.mdx`.

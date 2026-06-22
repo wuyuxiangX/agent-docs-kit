@@ -1,11 +1,11 @@
 ---
-name: living-docs-architecture
-description: Create or update Project Atlas and architecture MDX pages in a living-docs Fumadocs project. Use whenever the user asks for a project overview, architecture map, system shape, subsystem boundaries, data flow, runtime chain, contracts, ownership, onboarding map, refactor context, or architecture diagrams.
+name: agent-docs-kit-architecture
+description: Create or update Project Atlas and architecture MDX pages in an agent-docs-kit Fumadocs project. Use whenever the user asks for a project overview, architecture map, system shape, subsystem boundaries, data flow, runtime chain, contracts, ownership, onboarding map, refactor context, or architecture diagrams.
 ---
 
-# living-docs-architecture
+# agent-docs-kit-architecture
 
-Use this skill only inside a project that has `.living-docs/config.json`. If that file is missing, tell the user to run `living-docs init` first.
+Use this skill only inside a project that has `.agent-docs-kit/config.json`. If that file is missing, tell the user to run `agent-docs-kit init` first.
 
 Architecture pages describe current runtime truth. The Project Atlas is the
 project-level map: modules, layers, core flows, and architecture direction. It
@@ -13,40 +13,40 @@ should stay broad and should not become feature-by-feature documentation.
 
 ## Source Priority
 
-1. `.living-docs/config.json` for docs location and project settings.
+1. `.agent-docs-kit/config.json` for docs location and project settings.
 2. Existing MDX pages under the configured `contentDir`.
 3. Source files, routes, schemas, config, tests, logs, traces, or rendered runtime surfaces that prove the current shape.
 4. User-provided context, marked as unverified when it has not been checked against the repo or runtime.
 
 ## Workflow
 
-1. Read `.living-docs/config.json` and inspect the configured `contentDir`.
+1. Read `.agent-docs-kit/config.json` and inspect the configured `contentDir`.
 2. Identify the target level:
    - Use `Project Atlas` for broad project overviews, onboarding maps, refactor context, or "how this project is structured" requests.
    - Use a domain architecture page when the user asks about one subsystem.
 3. If the user needs a Project Atlas draft, preview it first:
 
 ```bash
-living-docs atlas --stdout
+agent-docs-kit atlas --stdout
 ```
 
 If the existing `atlas.mdx` is still the starter page or the user asked to
 replace it, write the scanned draft:
 
 ```bash
-living-docs atlas --force
+agent-docs-kit atlas --force
 ```
 
-If the CLI is unavailable and `atlas.mdx` does not exist, use:
+If `atlas.mdx` does not exist, create it:
 
 ```bash
-node .living-docs/scripts/create-doc.mjs atlas system project-atlas "Project Atlas"
+uvx agent-docs-kit create-doc atlas system project-atlas "Project Atlas"
 ```
 
 4. If a domain architecture page does not exist, create it:
 
 ```bash
-node .living-docs/scripts/create-doc.mjs architecture <domain> <domain> "<Title>"
+uvx agent-docs-kit create-doc architecture <domain> <domain> "<Title>"
 ```
 
 5. Edit the MDX page to reflect current runtime truth:
@@ -70,8 +70,8 @@ node .living-docs/scripts/create-doc.mjs architecture <domain> <domain> "<Title>
 9. Run:
 
 ```bash
-node .living-docs/scripts/glossary.mjs
-node .living-docs/scripts/check.mjs
+uvx agent-docs-kit glossary
+uvx agent-docs-kit check
 ```
 
 ## Write Safety

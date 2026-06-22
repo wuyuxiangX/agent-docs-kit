@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
-VERSION = "2.2.1"
+VERSION = "2.2.2"
 PACKAGE_DIR = Path(__file__).resolve().parent
 ASSETS_DIR = PACKAGE_DIR / "assets"
 STYLE_NAMES = ("atlas",)
@@ -95,7 +95,7 @@ ATLAS_LAYER_HINTS = (
     ),
     (
         "Delivery and knowledge system",
-        {"docs", ".github", ".living-docs", "scripts", "deploy", "infra", "ops"},
+        {"docs", ".github", ".agent-docs-kit", "scripts", "deploy", "infra", "ops"},
         "Documentation, automation, deployment, and operating knowledge.",
         "violet",
     ),
@@ -119,7 +119,7 @@ INTEGRATIONS = {
         label="Codex",
         skills_dir=".agents/skills",
         context_file="AGENTS.md",
-        next_step="Start Codex in this project and invoke skills such as $living-docs-change.",
+        next_step="Start Codex in this project and invoke skills such as $agent-docs-kit-change.",
         invocation_prefix="$",
     ),
     "claude": Integration(
@@ -127,7 +127,7 @@ INTEGRATIONS = {
         label="Claude Code",
         skills_dir=".claude/skills",
         context_file="CLAUDE.md",
-        next_step="Start Claude Code in this project and invoke skills such as /living-docs-change.",
+        next_step="Start Claude Code in this project and invoke skills such as /agent-docs-kit-change.",
         invocation_prefix="/",
     ),
     "copilot": Integration(
@@ -140,19 +140,19 @@ INTEGRATIONS = {
     "generic": Integration(
         key="generic",
         label="Generic",
-        skills_dir=".living-docs/skills",
-        context_file=".living-docs/AGENT_CONTEXT.md",
-        next_step="Read .living-docs/skills for portable skill instructions.",
+        skills_dir=".agent-docs-kit/skills",
+        context_file=".agent-docs-kit/AGENT_CONTEXT.md",
+        next_step="Read .agent-docs-kit/skills for portable skill instructions.",
     ),
     "cursor": Integration(
         key="cursor",
         label="Cursor",
-        skills_dir=".living-docs/skills",
-        context_file=".cursor/rules/living-docs.mdc",
-        next_step="Open the project in Cursor; the project rule points to .living-docs/skills.",
+        skills_dir=".agent-docs-kit/skills",
+        context_file=".cursor/rules/agent-docs-kit.mdc",
+        next_step="Open the project in Cursor; the project rule points to .agent-docs-kit/skills.",
         context_preamble=(
             "---\n"
-            "description: Use living-docs workflows when creating or maintaining project documentation\n"
+            "description: Use agent-docs-kit workflows when creating or maintaining project documentation\n"
             "alwaysApply: false\n"
             "---\n\n"
         ),
@@ -160,14 +160,14 @@ INTEGRATIONS = {
     "gemini": Integration(
         key="gemini",
         label="Gemini CLI",
-        skills_dir=".living-docs/skills",
+        skills_dir=".agent-docs-kit/skills",
         context_file="GEMINI.md",
-        next_step="Start Gemini CLI in this project; GEMINI.md points to .living-docs/skills.",
+        next_step="Start Gemini CLI in this project; GEMINI.md points to .agent-docs-kit/skills.",
     ),
 }
 
-CONTEXT_START = "<!-- LIVING-DOCS START -->"
-CONTEXT_END = "<!-- LIVING-DOCS END -->"
+CONTEXT_START = "<!-- AGENT-DOCS-KIT START -->"
+CONTEXT_END = "<!-- AGENT-DOCS-KIT END -->"
 
 
 class CliError(RuntimeError):
@@ -444,7 +444,7 @@ def collect_interactive_init_args(args: argparse.Namespace) -> None:
     if not sys.stdin.isatty():
         raise CliError("--interactive requires an interactive terminal")
 
-    print("living-docs init")
+    print("agent-docs-kit init")
     args.target = prompt_text("Target project", args.target or ".")
     args.docs_dir = prompt_text("Docs directory", args.docs_dir)
     args.integration = prompt_integrations(args.integration or ["codex"])
@@ -459,12 +459,12 @@ def collect_interactive_init_args(args: argparse.Namespace) -> None:
 
 def skill_lines(integration: Integration) -> str:
     names = [
-        ("living-docs-write", "route general documentation requests"),
-        ("living-docs-architecture", "document current architecture and Project Atlas maps"),
-        ("living-docs-change", "record shipped changes"),
-        ("living-docs-plan", "draft future plans"),
-        ("living-docs-glossary", "regenerate glossary"),
-        ("living-docs-check", "validate documentation health"),
+        ("agent-docs-kit-write", "route general documentation requests"),
+        ("agent-docs-kit-architecture", "document current architecture and Project Atlas maps"),
+        ("agent-docs-kit-change", "record shipped changes"),
+        ("agent-docs-kit-plan", "draft future plans"),
+        ("agent-docs-kit-glossary", "regenerate glossary"),
+        ("agent-docs-kit-check", "validate documentation health"),
     ]
     lines: list[str] = []
     for name, purpose in names:
@@ -477,21 +477,21 @@ def skill_lines(integration: Integration) -> str:
 
 def context_block(*, docs_dir: str, integration: Integration) -> str:
     return f"""{CONTEXT_START}
-This project uses living-docs for its documentation system.
+This project uses agent-docs-kit for its documentation system.
 
 Documentation system:
 - Framework: Fumadocs + MDX
 - Docs app: `{docs_dir}/`
 - Content source: `{docs_dir}/content/docs/`
-- Project config: `.living-docs/config.json`
-- Managed scripts: `.living-docs/scripts/`
-- Workflow skill files: `{integration.skills_dir}/living-docs-*/SKILL.md`
+- Project config: `.agent-docs-kit/config.json`
+- Managed scripts: `.agent-docs-kit/scripts/`
+- Workflow skill files: `{integration.skills_dir}/agent-docs-kit-*/SKILL.md`
 
-Use living-docs skills when the user asks to create or update project documentation:
+Use agent-docs-kit skills when the user asks to create or update project documentation:
 {skill_lines(integration)}
 
 Keep MDX as the source of truth. Do not hand-edit generated HTML output.
-Run `node .living-docs/scripts/check.mjs` or `uvx agent-docs-kit check` before treating docs work as complete.
+Run `uvx agent-docs-kit check` before treating docs work as complete.
 Use `uvx agent-docs-kit atlas --force` to replace the starter Project Atlas with a repository-structure draft.
 Use `uvx agent-docs-kit skills` to list available workflows and `uvx agent-docs-kit web --open` to preview the docs site locally.
 If `agent-docs-kit` was installed with `uv tool install agent-docs-kit`, the shorter `agent-docs-kit ...` commands are also available.
@@ -553,7 +553,7 @@ def init_project(args: argparse.Namespace) -> int:
         "PROJECT_NAME": project_name(target),
         "DOCS_DIR": docs_dir,
         "TODAY": date.today().isoformat(),
-        "LIVING_DOCS_VERSION": VERSION,
+        "AGENT_DOCS_KIT_VERSION": VERSION,
     }
 
     starter_src = ASSETS_DIR / "fumadocs-starter"
@@ -590,7 +590,7 @@ def init_project(args: argparse.Namespace) -> int:
         "integrations": integrations,
         "createdAt": date.today().isoformat(),
     }
-    write_json(target / ".living-docs" / "config.json", config, force=args.force)
+    write_json(target / ".agent-docs-kit" / "config.json", config, force=args.force)
 
     skill_src = ASSETS_DIR / "workflow-skills"
     installed_skill_dirs: set[str] = set()
@@ -614,11 +614,11 @@ def init_project(args: argparse.Namespace) -> int:
         )
 
     rel_written = [str(path.relative_to(target)) for path in written]
-    print(f"living-docs {VERSION}")
+    print(f"agent-docs-kit {VERSION}")
     print(f"Initialized Fumadocs documentation system in {target}")
     print(f"Docs app: {docs_dir}/")
     print(f"Style preset: {args.style}")
-    print(f"Managed config: .living-docs/config.json")
+    print(f"Managed config: .agent-docs-kit/config.json")
     print(f"Installed integrations: {', '.join(integrations)}")
     print(f"Files written: {len(rel_written) + 1}")
     print()
@@ -634,22 +634,22 @@ def init_project(args: argparse.Namespace) -> int:
     print("  agent-docs-kit skills")
     for integration_name in integrations:
         print(f"  - {INTEGRATIONS[integration_name].next_step}")
-    print("  - Run `uvx agent-docs-kit check` or `node .living-docs/scripts/check.mjs` before committing docs changes.")
+    print("  - Run `uvx agent-docs-kit check` before committing docs changes.")
     return 0
 
 
 def find_project_root(start: Path) -> Path:
     current = start.resolve()
     for candidate in [current, *current.parents]:
-        if (candidate / ".living-docs" / "config.json").is_file():
+        if (candidate / ".agent-docs-kit" / "config.json").is_file():
             return candidate
     return current
 
 
 def load_config(root: Path) -> dict:
-    path = root / ".living-docs" / "config.json"
+    path = root / ".agent-docs-kit" / "config.json"
     if not path.is_file():
-        raise CliError("not a living-docs project: missing .living-docs/config.json")
+        raise CliError("not an agent-docs-kit project: missing .agent-docs-kit/config.json")
     return json.loads(path.read_text())
 
 
@@ -689,7 +689,7 @@ def walk_atlas_paths(root: Path, *, max_depth: int) -> tuple[list[Path], list[Pa
         dirnames[:] = sorted(
             name
             for name in dirnames
-            if name not in ATLAS_IGNORED_DIRS and not (name.startswith(".") and name not in {".github", ".living-docs", ".agents", ".claude", ".cursor"})
+            if name not in ATLAS_IGNORED_DIRS and not (name.startswith(".") and name not in {".github", ".agent-docs-kit", ".agents", ".claude", ".cursor"})
         )
 
         if len(rel_parts) > max_depth:
@@ -967,7 +967,7 @@ def atlas_command(args: argparse.Namespace) -> int:
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(content)
     print(f"Project Atlas written: {output.relative_to(root)}")
-    print("Review TODOs, verify runtime paths, then run `living-docs check`.")
+    print("Review TODOs, verify runtime paths, then run `agent-docs-kit check`.")
     return 0
 
 
@@ -1109,26 +1109,58 @@ def check_project(args: argparse.Namespace) -> int:
 
     glossary = content_dir / "glossary.mdx"
     if not glossary.is_file():
-        errors.append("missing generated glossary: run node .living-docs/scripts/glossary.mjs")
+        errors.append("missing generated glossary: run the agent-docs-kit-glossary workflow")
 
     if errors:
-        print(f"living-docs check failed ({len(errors)} issue(s))")
+        print(f"agent-docs-kit check failed ({len(errors)} issue(s))")
         for error in errors:
             print(f"  - {error}")
         return 1
 
-    print(f"living-docs check passed ({len(mdx_files)} MDX file(s))")
+    print(f"agent-docs-kit check passed ({len(mdx_files)} MDX file(s))")
     return 0
 
 
+def run_project_node_script(script_name: str, script_args: list[str]) -> int:
+    root = find_project_root(Path.cwd())
+    if not (root / ".agent-docs-kit" / "config.json").is_file():
+        raise CliError("not an agent-docs-kit project: missing .agent-docs-kit/config.json")
+
+    script = root / ".agent-docs-kit" / "scripts" / script_name
+    if not script.is_file():
+        raise CliError(
+            f"missing generated script: {script.relative_to(root)}. "
+            "Run `uvx agent-docs-kit init --force` to restore managed files."
+        )
+
+    try:
+        completed = subprocess.run(["node", str(script), *script_args], cwd=root)
+    except FileNotFoundError as exc:
+        raise CliError("node is required for generated project scripts") from exc
+    return completed.returncode
+
+
+def create_doc_command(args: argparse.Namespace) -> int:
+    script_args = [args.kind, args.domain]
+    if args.slug:
+        script_args.append(args.slug)
+    if args.title:
+        script_args.extend(args.title)
+    return run_project_node_script("create-doc.mjs", script_args)
+
+
+def glossary_command(_: argparse.Namespace) -> int:
+    return run_project_node_script("glossary.mjs", [])
+
+
 def version_command(_: argparse.Namespace) -> int:
-    print(f"living-docs {VERSION}")
+    print(f"agent-docs-kit {VERSION}")
     return 0
 
 
 def skills_command(_: argparse.Namespace) -> int:
     root = find_project_root(Path.cwd())
-    is_project = (root / ".living-docs" / "config.json").is_file()
+    is_project = (root / ".agent-docs-kit" / "config.json").is_file()
     config: dict = {}
     if is_project:
         config = load_config(root)
@@ -1137,7 +1169,7 @@ def skills_command(_: argparse.Namespace) -> int:
     style = config.get("style", "atlas")
     integrations = config.get("integrations", sorted(INTEGRATIONS))
 
-    print("living-docs skills")
+    print("agent-docs-kit skills")
     print()
     print("CLI:")
     print("  uvx agent-docs-kit init")
@@ -1147,12 +1179,14 @@ def skills_command(_: argparse.Namespace) -> int:
     print("  uvx agent-docs-kit init . --style atlas --interactive")
     print("  uvx agent-docs-kit web --open")
     print("  uvx agent-docs-kit atlas --force")
+    print('  uvx agent-docs-kit create-doc change api auth-flow "Auth Flow Update"')
+    print("  uvx agent-docs-kit glossary")
     print("  uvx agent-docs-kit check")
     print("  uvx agent-docs-kit skills")
     print("  uvx agent-docs-kit styles")
     print("  uvx agent-docs-kit version")
     print("  uvx agent-docs-kit self check")
-    print("  persistent install alias: agent-docs-kit ... or living-docs ...")
+    print("  persistent install command: agent-docs-kit ...")
     print(f"  current style: {style}")
     print("  available integrations: " + ", ".join(sorted(INTEGRATIONS)))
     print()
@@ -1162,13 +1196,9 @@ def skills_command(_: argparse.Namespace) -> int:
     print("  npm run typecheck")
     print("  npm run build")
     print()
-    print("Project scripts:")
-    print('  node .living-docs/scripts/create-doc.mjs architecture <domain> <slug> "<Title>"')
-    print('  node .living-docs/scripts/create-doc.mjs atlas system project-atlas "Project Atlas"')
-    print('  node .living-docs/scripts/create-doc.mjs change <domain> <slug> "<Title>"')
-    print('  node .living-docs/scripts/create-doc.mjs plan <domain> <slug> "<Title>"')
-    print("  node .living-docs/scripts/glossary.mjs")
-    print("  node .living-docs/scripts/check.mjs")
+    print("Authoring:")
+    print("  use the installed agent-docs-kit-* workflows for architecture, changes, plans, glossary, and checks")
+    print("  .agent-docs-kit/scripts/ contains generated implementation details used by those workflows")
     print()
     print("Agent integrations:")
     for integration_name in integrations:
@@ -1177,12 +1207,12 @@ def skills_command(_: argparse.Namespace) -> int:
             continue
         print(f"  {integration.label} ({integration.skills_dir}):")
         for name in [
-            "living-docs-write",
-            "living-docs-architecture",
-            "living-docs-change",
-            "living-docs-plan",
-            "living-docs-glossary",
-            "living-docs-check",
+            "agent-docs-kit-write",
+            "agent-docs-kit-architecture",
+            "agent-docs-kit-change",
+            "agent-docs-kit-plan",
+            "agent-docs-kit-glossary",
+            "agent-docs-kit-check",
         ]:
             if integration.invocation_prefix:
                 print(f"    {integration.invocation_prefix}{name}")
@@ -1192,19 +1222,19 @@ def skills_command(_: argparse.Namespace) -> int:
 
 
 def styles_command(_: argparse.Namespace) -> int:
-    print("living-docs styles")
+    print("agent-docs-kit styles")
     print()
     print("  atlas  product documentation with clear hierarchy")
     print()
     print("Use:")
-    print("  living-docs init")
-    print("  living-docs init . --style atlas --interactive")
-    print("  living-docs init . --style atlas --yes")
+    print("  agent-docs-kit init")
+    print("  agent-docs-kit init . --style atlas --interactive")
+    print("  agent-docs-kit init . --style atlas --yes")
     return 0
 
 
 def self_check(_: argparse.Namespace) -> int:
-    print(f"living-docs {VERSION}")
+    print(f"agent-docs-kit {VERSION}")
     print(f"assets: {ASSETS_DIR}")
     missing = [
         path
@@ -1227,7 +1257,7 @@ def self_check(_: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="living-docs",
+        prog="agent-docs-kit",
         description="Bootstrap and maintain a Fumadocs MDX documentation system.",
     )
     sub = parser.add_subparsers(dest="command", required=True)
@@ -1248,11 +1278,11 @@ def build_parser() -> argparse.ArgumentParser:
     init.add_argument("-y", "--yes", action="store_true", help="accept defaults and skip prompts")
     init.set_defaults(func=init_project)
 
-    check = sub.add_parser("check", help="validate a living-docs project")
+    check = sub.add_parser("check", help="validate an agent-docs-kit project")
     check.set_defaults(func=check_project)
 
     web = sub.add_parser("web", help="install dependencies if needed and start the local docs site")
-    web.add_argument("target", nargs="?", default=None, help="living-docs project directory or '.'")
+    web.add_argument("target", nargs="?", default=None, help="agent-docs-kit project directory or '.'")
     web.add_argument("--port", type=int, default=3333, help="preferred local port")
     web.add_argument("--host", default="127.0.0.1", help="host passed to the docs dev server")
     web.add_argument("--open", action="store_true", help="open the docs URL in the default browser")
@@ -1260,13 +1290,23 @@ def build_parser() -> argparse.ArgumentParser:
     web.set_defaults(func=web_command)
 
     atlas = sub.add_parser("atlas", help="generate a Project Atlas MDX draft from repository structure")
-    atlas.add_argument("target", nargs="?", default=None, help="living-docs project directory or '.'")
+    atlas.add_argument("target", nargs="?", default=None, help="agent-docs-kit project directory or '.'")
     atlas.add_argument("--output", default=None, help="project-relative output path; default is docs content atlas.mdx")
     atlas.add_argument("--force", action="store_true", help="overwrite an existing atlas file")
     atlas.add_argument("--stdout", action="store_true", help="print the generated MDX instead of writing a file")
     atlas.set_defaults(func=atlas_command)
 
-    skills = sub.add_parser("skills", help="print installed skill names and supporting CLI/script actions")
+    create_doc = sub.add_parser("create-doc", help="create a managed MDX page from a template")
+    create_doc.add_argument("kind", choices=["atlas", "architecture", "change", "plan"])
+    create_doc.add_argument("domain", help="domain or area slug")
+    create_doc.add_argument("slug", nargs="?", help="topic slug")
+    create_doc.add_argument("title", nargs=argparse.REMAINDER, help="optional page title")
+    create_doc.set_defaults(func=create_doc_command)
+
+    glossary = sub.add_parser("glossary", help="regenerate the generated glossary page")
+    glossary.set_defaults(func=glossary_command)
+
+    skills = sub.add_parser("skills", help="print installed skill names and supporting CLI actions")
     skills.set_defaults(func=skills_command)
 
     styles = sub.add_parser("styles", help="list visual style presets")
@@ -1275,7 +1315,7 @@ def build_parser() -> argparse.ArgumentParser:
     version = sub.add_parser("version", help="print version")
     version.set_defaults(func=version_command)
 
-    self_parser = sub.add_parser("self", help="manage the living-docs CLI")
+    self_parser = sub.add_parser("self", help="manage the agent-docs-kit CLI")
     self_sub = self_parser.add_subparsers(dest="self_command", required=True)
     self_check_parser = self_sub.add_parser("check", help="validate bundled CLI assets")
     self_check_parser.set_defaults(func=self_check)

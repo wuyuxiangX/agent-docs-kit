@@ -12,7 +12,7 @@ import {
   StateFlow,
   SystemMap,
   TermGrid,
-} from './living-docs';
+} from './agent-docs-kit';
 
 export function getMDXComponents(components?: MDXComponents) {
   return {

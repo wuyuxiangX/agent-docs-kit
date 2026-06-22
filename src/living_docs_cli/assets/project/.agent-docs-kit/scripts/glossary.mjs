@@ -4,7 +4,7 @@ import { join, relative } from 'node:path';
 import { readdirSync, statSync } from 'node:fs';
 
 const root = process.cwd();
-const configPath = join(root, '.living-docs', 'config.json');
+const configPath = join(root, '.agent-docs-kit', 'config.json');
 
 function fail(message) {
   console.error(`Error: ${message}`);
@@ -12,7 +12,7 @@ function fail(message) {
 }
 
 if (!existsSync(configPath)) {
-  fail('missing .living-docs/config.json; run living-docs init first');
+  fail('missing .agent-docs-kit/config.json; run agent-docs-kit init first');
 }
 
 const config = JSON.parse(readFileSync(configPath, 'utf8'));
@@ -87,7 +87,7 @@ const bodyItems = items
 const content = [
   '---',
   'title: "Glossary"',
-  'description: "Generated term index for living-docs"',
+  'description: "Generated term index for agent-docs-kit"',
   'type: "glossary"',
   '---',
   '',

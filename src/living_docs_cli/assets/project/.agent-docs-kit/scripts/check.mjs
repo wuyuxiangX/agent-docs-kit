@@ -3,7 +3,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const root = process.cwd();
-const configPath = join(root, '.living-docs', 'config.json');
+const configPath = join(root, '.agent-docs-kit', 'config.json');
 const errors = [];
 
 function walk(dir) {
@@ -42,7 +42,7 @@ function hasDiagram(text) {
 }
 
 if (!existsSync(configPath)) {
-  errors.push('missing .living-docs/config.json');
+  errors.push('missing .agent-docs-kit/config.json');
 } else {
   const config = JSON.parse(readFileSync(configPath, 'utf8'));
   const contentDir = join(root, config.contentDir || 'docs/content/docs');
@@ -67,15 +67,15 @@ if (!existsSync(configPath)) {
       }
     }
     if (!existsSync(join(contentDir, 'glossary.mdx'))) {
-      errors.push('missing glossary.mdx; run node .living-docs/scripts/glossary.mjs');
+      errors.push('missing glossary.mdx; run agent-docs-kit glossary');
     }
   }
 }
 
 if (errors.length) {
-  console.error(`living-docs check failed (${errors.length} issue(s))`);
+  console.error(`agent-docs-kit check failed (${errors.length} issue(s))`);
   for (const error of errors) console.error(`  - ${error}`);
   process.exit(1);
 }
 
-console.log('living-docs check passed');
+console.log('agent-docs-kit check passed');

@@ -13,7 +13,7 @@ type: "guide"
   secondaryHref="/docs/glossary"
 />
 
-This documentation system is managed by living-docs. Start with the Project
+This documentation system is managed by agent-docs-kit. Start with the Project
 Atlas when the user needs a broad view of modules, layers, flows, and
 architecture direction. Use MDX as the source of truth and Fumadocs as the
 presentation layer.
@@ -35,45 +35,45 @@ Use these project-local skills from your agent:
 <SkillGrid
   items={[
     {
-      name: 'living-docs-write',
+      name: 'agent-docs-kit-write',
       body: 'Route general documentation requests to the right architecture, change, plan, glossary, or validation workflow.',
       tone: 'violet',
     },
     {
-      name: 'living-docs-architecture',
+      name: 'agent-docs-kit-architecture',
       body: 'Capture the Project Atlas, current system shape, contracts, runtime paths, and diagrams.',
       tone: 'blue',
     },
     {
-      name: 'living-docs-change',
+      name: 'agent-docs-kit-change',
       body: 'Record shipped behavior changes with source files, validation, and follow-up notes.',
       tone: 'green',
     },
     {
-      name: 'living-docs-plan',
+      name: 'agent-docs-kit-plan',
       body: 'Draft future design directions before they become committed change records.',
       tone: 'amber',
     },
     {
-      name: 'living-docs-glossary',
+      name: 'agent-docs-kit-glossary',
       body: 'Regenerate shared vocabulary from frontmatter terms across the docs.',
       tone: 'violet',
     },
     {
-      name: 'living-docs-check',
+      name: 'agent-docs-kit-check',
       body: 'Validate MDX health, required diagrams, generated glossary, and managed docs metadata.',
       tone: 'red',
     },
   ]}
 />
 
-The skills use these project-local scripts:
+Common commands:
 
 ```bash
-agent-docs-kit web
 agent-docs-kit skills
+agent-docs-kit web --open
 agent-docs-kit atlas --force
-node .living-docs/scripts/create-doc.mjs change api auth-flow "Auth Flow Update"
-node .living-docs/scripts/glossary.mjs
-node .living-docs/scripts/check.mjs
+agent-docs-kit create-doc change api auth-flow "Auth Flow Update"
+agent-docs-kit glossary
+agent-docs-kit check
 ```

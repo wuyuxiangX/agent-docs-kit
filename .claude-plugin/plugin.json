@@ -1,6 +1,6 @@
 {
   "name": "agent-docs-kit",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Bootstrap and maintain a Fumadocs + MDX Project Atlas with project-local scripts, agent skills, managed context blocks, glossary generation, and validation.",
   "author": {
     "name": "wuyuxiangX"
@@ -8,7 +8,7 @@
   "homepage": "https://github.com/wuyuxiangX/agent-docs-kit",
   "license": "MIT",
   "keywords": [
-    "living-docs",
+    "agent-docs-kit",
     "documentation",
     "fumadocs",
     "mdx",

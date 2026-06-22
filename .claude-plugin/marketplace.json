@@ -1,8 +1,8 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "agent-docs-kit",
-  "version": "2.2.1",
-  "description": "Standalone marketplace for the living-docs Fumadocs/MDX Project Atlas workflow.",
+  "version": "2.2.2",
+  "description": "Standalone marketplace for the agent-docs-kit Fumadocs/MDX Project Atlas workflow.",
   "owner": {
     "name": "wuyuxiangX"
   },
@@ -10,7 +10,7 @@
     {
       "name": "agent-docs-kit",
       "description": "Initialize and maintain a Project Atlas: Fumadocs + MDX, project-local templates/scripts, agent skills, managed context blocks, glossary generation, and validation.",
-      "version": "2.2.1",
+      "version": "2.2.2",
       "author": {
         "name": "wuyuxiangX"
       },

@@ -1,29 +1,29 @@
 ---
-name: living-docs-plan
-description: Create or update future plans, blueprints, design direction, implementation plans, or proposal MDX pages in a living-docs Fumadocs project. Use when documenting intended work before it ships or when the user wants a plan separated from current architecture and shipped change records.
+name: agent-docs-kit-plan
+description: Create or update future plans, blueprints, design direction, implementation plans, or proposal MDX pages in an agent-docs-kit Fumadocs project. Use when documenting intended work before it ships or when the user wants a plan separated from current architecture and shipped change records.
 ---
 
-# living-docs-plan
+# agent-docs-kit-plan
 
-Use this skill only inside a project that has `.living-docs/config.json`. If that file is missing, tell the user to run `living-docs init` first.
+Use this skill only inside a project that has `.agent-docs-kit/config.json`. If that file is missing, tell the user to run `agent-docs-kit init` first.
 
 Plan pages describe future intent. They should be explicit about scope, assumptions, validation, and open questions.
 
 ## Source Priority
 
-1. `.living-docs/config.json` for docs location and project settings.
+1. `.agent-docs-kit/config.json` for docs location and project settings.
 2. Existing architecture and change pages under the configured `contentDir`.
 3. Source files, APIs, schemas, config, tests, or runtime surfaces that constrain the proposed work.
 4. User-provided goals and constraints.
 
 ## Workflow
 
-1. Read `.living-docs/config.json`.
+1. Read `.agent-docs-kit/config.json`.
 2. Choose the target domain and topic slug.
 3. Create a plan page:
 
 ```bash
-node .living-docs/scripts/create-doc.mjs plan <domain> <topic-slug> "<Title>"
+uvx agent-docs-kit create-doc plan <domain> <topic-slug> "<Title>"
 ```
 
 4. Fill the plan with:
@@ -42,8 +42,8 @@ node .living-docs/scripts/create-doc.mjs plan <domain> <topic-slug> "<Title>"
 8. Run:
 
 ```bash
-node .living-docs/scripts/glossary.mjs
-node .living-docs/scripts/check.mjs
+uvx agent-docs-kit glossary
+uvx agent-docs-kit check
 ```
 
 ## Write Safety

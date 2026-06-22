@@ -6,8 +6,8 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "fumadocs-mdx && tsc --noEmit",
-    "docs:check": "node ../.living-docs/scripts/check.mjs",
-    "docs:glossary": "node ../.living-docs/scripts/glossary.mjs"
+    "docs:check": "node ../.agent-docs-kit/scripts/check.mjs",
+    "docs:glossary": "node ../.agent-docs-kit/scripts/glossary.mjs"
   },
   "dependencies": {
     "fumadocs-core": "^16.10.3",

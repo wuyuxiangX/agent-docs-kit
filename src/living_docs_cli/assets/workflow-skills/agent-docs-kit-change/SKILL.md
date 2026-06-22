@@ -1,36 +1,36 @@
 ---
-name: living-docs-change
-description: Record shipped changes in a living-docs Fumadocs project. Use after refactors, features, bug fixes, API or data-contract changes, architecture changes, migrations, deploy changes, or operational fixes that need an immutable paper trail.
+name: agent-docs-kit-change
+description: Record shipped changes in an agent-docs-kit Fumadocs project. Use after refactors, features, bug fixes, API or data-contract changes, architecture changes, migrations, deploy changes, or operational fixes that need an immutable paper trail.
 ---
 
-# living-docs-change
+# agent-docs-kit-change
 
-Use this skill only inside a project that has `.living-docs/config.json`. If that file is missing, tell the user to run `living-docs init` first.
+Use this skill only inside a project that has `.agent-docs-kit/config.json`. If that file is missing, tell the user to run `agent-docs-kit init` first.
 
 Change records are immutable shipped-history pages. They should explain what changed, why it changed, and how it was verified. They are not the place for unshipped plans.
 
 ## Source Priority
 
-1. `.living-docs/config.json` for docs location and project settings.
+1. `.agent-docs-kit/config.json` for docs location and project settings.
 2. Git diff, commits, changed source files, migrations, config, tests, logs, or runtime checks that prove the shipped change.
 3. Existing architecture pages that may need to be updated to match the new current state.
 4. User-provided context, marked as unverified when it has not been checked against the repo or runtime.
 
 ## Workflow
 
-1. Read `.living-docs/config.json`.
+1. Read `.agent-docs-kit/config.json`.
 2. Inspect the relevant source diff, tests, logs, or runtime surface before writing.
 3. Choose a domain and short topic slug.
 4. Create a change record:
 
 ```bash
-node .living-docs/scripts/create-doc.mjs change <domain> <topic-slug> "<Title>"
+uvx agent-docs-kit create-doc change <domain> <topic-slug> "<Title>"
 ```
 
 Optional metadata:
 
 ```bash
-LIVING_DOCS_SOURCE="commit/diff/runtime source" LIVING_DOCS_TESTS="test or verification summary" node .living-docs/scripts/create-doc.mjs change <domain> <topic-slug> "<Title>"
+AGENT_DOCS_KIT_SOURCE="commit/diff/runtime source" AGENT_DOCS_KIT_TESTS="test or verification summary" uvx agent-docs-kit create-doc change <domain> <topic-slug> "<Title>"
 ```
 
 5. Fill the MDX page:
@@ -49,8 +49,8 @@ LIVING_DOCS_SOURCE="commit/diff/runtime source" LIVING_DOCS_TESTS="test or verif
 9. Run:
 
 ```bash
-node .living-docs/scripts/glossary.mjs
-node .living-docs/scripts/check.mjs
+uvx agent-docs-kit glossary
+uvx agent-docs-kit check
 ```
 
 ## Write Safety
